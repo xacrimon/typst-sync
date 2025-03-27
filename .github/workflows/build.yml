@@ -31,30 +31,30 @@ jobs:
             build-rendered-
       - id: diff
         env:
-          cache_hit: ${{ steps.restore_rendered.outputs.cache-hit == 'true' }}
+          exact_hit: ${{ steps.restore_rendered.outputs.cache-hit == 'true' }}
           key_req: ${{ steps.restore_rendered.outputs.cache-primary-key }}
           key_got: ${{ steps.restore_rendered.outputs.cache-matched-key }}
         run: |
-          cache_hit="$cache_hit"
+          exact_hit="$exact_hit"
           key_req="$key_req"
           key_got="$key_got"
 
-          if [ $cache_hit = 'true' ] && [ $key_req = $key_got ]; then
-            echo "case 1"
+          if [ $exact_hit = 'true' ] then
+            echo "exact cache hit"
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ $cache_hit = 'true' ] && [ $key_req != $key_got ]; then
-            echo "case 2"
+          if [ test -z "$key_got" ]; then
+            echo "cache miss"
+            cp project-list.txt build/do_update.txt
+          fi
+
+          if [ $key_req = $key_got ]; then
+            echo "partial cache hit"
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
             git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
             grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
-          fi
-
-          if [ $cache_hit = 'false' ]; then
-            echo "case 3"
-            cp project-list.txt build/do_update.txt
           fi
       - name: Compute Typst dependencies
         if: ${{ steps.diff.outputs.no_build != 'true' }}
