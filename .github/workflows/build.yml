@@ -28,7 +28,7 @@ jobs:
         with:
           path: build/rendered
           key: build-rendered-${{ hashFiles('projects/**') }}
-          restore_keys: |
+          restore-keys: |
             build-rendered-
       - name: Find changed projects
         if: steps.restore-rendered.outputs.cache-hit == 'true'
@@ -69,7 +69,6 @@ jobs:
 
   tag:
     needs: render
-    if: ${{ needs.render.outputs.do_update != '0' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
