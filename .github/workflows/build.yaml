@@ -18,9 +18,9 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           commit_sha=${{ github.sha }}
-          parent_sha=$(git rev-parse ${commit_sha}^ | xargs echo -n)
+          parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
 
-          git diff --name-only ${commit_sha} ${parent_sha}~1 > changed.txt
+          git diff --name-only ${commit_sha} ${parent_sha} > changed.txt
           echo "CHANGED:
           cat changed.txt
 
