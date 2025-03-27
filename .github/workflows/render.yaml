@@ -36,4 +36,6 @@ jobs:
           git tag "render-${github_sha_short}"
       - uses: ad-m/github-push-action@master
         with:
+          force: true
           tags: true
+          branch: build
