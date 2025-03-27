@@ -1,7 +1,10 @@
-name: render
+name: build
+on:
+  push:
+    branches:
+      - main
 permissions:
   contents: write
-on: push
 jobs:
   render:
     runs-on: ubuntu-latest
@@ -10,13 +13,14 @@ jobs:
       - uses: typst-community/setup-typst@v4
         with:
           cache-dependency-path: mikrodatorprojekt-requirements.typ
-      - run: typst compile mikrodatorprojekt/main.typ mikrodatorprojekt.pdf
+      - run: mkdir build
+      - run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
       - uses: actions/upload-artifact@v4
         with:
-          name: mikrodatorprojekt
-          path: mikrodatorprojekt.pdf
+          name: build
+          path: build
 
-  archive:
+  tag:
     needs: render
     runs-on: ubuntu-latest
     steps:
@@ -25,15 +29,15 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          name: mikrodatorprojekt
+          name: build
       - run: |
           github_sha_hash=${{ github.sha }}
           github_sha_short="${github_sha_hash:0:7}"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add mikrodatorprojekt.pdf
-          git commit -m "render ${github_sha_short}"
-          git tag "render-${github_sha_short}"
+          git commit -m "build ${github_sha_short}"
+          git tag "build-${github_sha_short}"
       - uses: ad-m/github-push-action@master
         with:
           force: true
