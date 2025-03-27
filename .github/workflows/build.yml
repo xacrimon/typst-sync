@@ -45,7 +45,7 @@ jobs:
 
           while IFS="" read -r p || [ -n "$p" ]
           do
-            find "$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
+            find "projects/$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
           done < build/do_update.txt
           grep -A 1 "#import .*" build/amalgam.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
@@ -56,7 +56,7 @@ jobs:
           mkdir -p build/rendered
           while IFS="" read -r p || [ -n "$p" ]
           do
-            typst compile "$p/main.typ" "build/rendered/${p}.pdf"
+            typst compile "projects/$p/main.typ" "build/rendered/${p}.pdf"
           done < build/do_update.txt
           echo "${{ github.sha }}" > build/rendered/commit_sha.txt
       - uses: actions/cache/save@v4
