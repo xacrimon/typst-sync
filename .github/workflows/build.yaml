@@ -6,7 +6,7 @@ on:
 
 concurrency:
   group: build-workflow
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > mikrodatorprojekt-requirements.typ
+      - run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
-          cache-dependency-path: mikrodatorprojekt-requirements.typ
+          cache-dependency-path: requirements.typ
       - run: mkdir build
       - run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
       - uses: actions/upload-artifact@v4
