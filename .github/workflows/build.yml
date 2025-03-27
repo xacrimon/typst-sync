@@ -40,12 +40,12 @@ jobs:
           echo "$l_ch"
           echo "$l_cfm"
 
-          if [ '$l_ch' == 'true' ] && [ '$l_cfm' == 'true' ]; then
+          if [ '$l_ch' = 'true' ] && [ '$l_cfm' = 'true' ]; then
             echo "case 1"
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ '$l_ch' == 'true' ] && [ '$l_cfm' == 'false' ]; then
+          if [ '$l_ch' = 'true' ] && [ '$l_cfm' = 'false' ]; then
             echo "case 2"
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
@@ -53,7 +53,7 @@ jobs:
             grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
           fi
 
-          if [ '$l_ch' == 'false' ]; then
+          if [ '$l_ch' = 'false' ]; then
             echo "case 3"
             cp project-list.txt build/do_update.txt
           fi
