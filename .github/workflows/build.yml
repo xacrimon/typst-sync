@@ -35,15 +35,17 @@ jobs:
           cache_hit: ${{ steps.restore_rendered.outputs.cache-hit }}
           cache_full_match: ${{ steps.restore_rendered.outputs.cache-primary-key == steps.restore-rendered.outputs.cache-matched-key }}
         run: |
-          echo "$cache_hit"
-          echo "$cache_full_match"
+          l_ch="$cache_hit"
+          l_cfm="$cache_full_match"
+          echo "$l_ch"
+          echo "$l_cfm"
 
-          if [ '$cache_hit' == 'true' ] && [ '$cache_full_match' == 'true' ]; then
+          if [ '$l_ch' == 'true' ] && [ '$l_cfm' == 'true' ]; then
             echo "case 1"
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ '$cache_hit' == 'true' ] && [ '$cache_full_match' == 'false' ]; then
+          if [ '$l_ch' == 'true' ] && [ '$l_cfm' == 'false' ]; then
             echo "case 2"
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
@@ -51,7 +53,7 @@ jobs:
             grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
           fi
 
-          if [ '$cache_hit' == 'false' ]; then
+          if [ '$l_ch' == 'false' ]; then
             echo "case 3"
             cp project-list.txt build/do_update.txt
           fi
