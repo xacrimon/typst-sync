@@ -38,18 +38,18 @@ jobs:
           echo "$cache_hit"
           echo "$cache_full_match"
 
-          if [ "$cache_hit" == 'true' && "$cache_full_match" == 'true' ]; then
+          if [ '$cache_hit' == 'true' && '$cache_full_match' == 'true' ]; then
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ "$cache_hit" == 'true' && "$cache_full_match" == 'false' ]; then
+          if [ '$cache_hit' == 'true' && '$cache_full_match' == 'false' ]; then
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
             git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
             grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
           fi
 
-          if [ "$cache_hit" == 'false' ]; then
+          if [ '$cache_hit' == 'false' ]; then
             cp project-list.txt build/do_update.txt
           fi
       - name: Compute Typst dependencies
