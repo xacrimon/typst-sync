@@ -49,7 +49,7 @@ jobs:
             cp project-list.txt build/do_update.txt
           fi
 
-          if [ $exact_hit = 'false' ] && [ $key_req = $key_got ]; then
+          if [ $exact_hit = 'false' ] && [ $key_req != $key_got ]; then
             echo "partial cache hit"
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
