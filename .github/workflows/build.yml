@@ -57,7 +57,7 @@ jobs:
             echo "changed not zero"
             echo "do_update=yes" >> "$GITHUB_ENV"
           fi
-      - name: Push artifacts to repository
+      - name: Create build tag
         if: ${{ env.do_update == 'yes' }}
         run: |
           commit_sha=${{ github.sha }}
@@ -69,6 +69,7 @@ jobs:
           git tag "build-${commit_sha_short}"
           git tag -f build-latest
       - uses: ad-m/github-push-action@master
+        if: ${{ env.do_update == 'yes' }}
         with:
           force: true
           tags: true
