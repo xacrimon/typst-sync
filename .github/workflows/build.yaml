@@ -47,9 +47,8 @@ jobs:
           git commit -m "build ${github_sha_short}"
           git tag "build-${github_sha_short}"
           git tag -f build-latest
-          commit_sha_hash=$(git rev-parse HEAD | xargs echo -n)
-          git checkout ${commit_sha_hash}
       - uses: ad-m/github-push-action@master
         with:
           force: true
           tags: true
+          branch: build
