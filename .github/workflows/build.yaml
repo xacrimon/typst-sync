@@ -18,27 +18,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: |
+      - name: create build directory
+        run: mkdir build
+      - name: find changed projects
+        run: |
           commit_sha=${{ github.sha }}
           parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
-
-          git diff --name-only ${commit_sha} ${parent_sha} > changed.txt
-          echo "CHANGED:"
-          cat changed.txt
-
-          cat changed.txt | cut -d'/' -f1 | uniq > changed_top.txt
-          echo "CHANGED TOP:"
-          cat changed_top.txt
-
-          ( grep "mikrodatorprojekt" changed_top.txt || [ "$?" == "1" ] ) >> needs-update.txt
-          echo "NEEDS UPDATE:"
-          cat needs-update.txt
-      - run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > requirements.typ
+          git diff --name-only ${commit_sha} ${parent_sha} > build/changed_files.txt
+          cut -d'/' -f1 build/changed_files.txt | uniq > build/changed_top_level.txt
+          ( grep "mikrodatorprojekt" build/changed_top_level.txt || [ "$?" == "1" ] ) >> build/needs_update.txt
+      - name: compute typst dependencies
+        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
           cache-dependency-path: requirements.typ
-      - run: mkdir build
-      - run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
+      - name: build mikrodatorprojekt
+        run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
       - uses: actions/upload-artifact@v4
         with:
           name: build
