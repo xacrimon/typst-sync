@@ -18,21 +18,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: create build directory
+      - name: Create build directory
         run: mkdir build
-      - name: find changed projects
+      - name: Find changed projects
         run: |
           commit_sha=${{ github.sha }}
           parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
           git diff --name-only ${commit_sha} ${parent_sha} > build/changed_files.txt
           cut -d'/' -f1 build/changed_files.txt | uniq > build/changed_top_level.txt
           ( grep "mikrodatorprojekt" build/changed_top_level.txt || [ "$?" == "1" ] ) >> build/needs_update.txt
-      - name: compute typst dependencies
-        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > build/requirements.typ
+      - name: Compute Typst dependencies
+        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
           cache-dependency-path: build/requirements.typ
-      - name: build mikrodatorprojekt
+      - name: Build mikrodatorprojekt
         run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
       - uses: actions/upload-artifact@v4
         with:
@@ -50,14 +50,23 @@ jobs:
         with:
           name: build
           path: build
-      - run: |
-          github_sha_hash=${{ github.sha }}
-          github_sha_short="${github_sha_hash:0:7}"
+      - name: Check if anything changed
+        run: |
+          changed_count=$(cat build/needs_update.txt | wc -l | xargs echo -n)
+          if [ $changed_count != '0' ]; then
+            echo "changed not zero"
+            echo "do_update=yes" >> "$GITHUB_ENV"
+          fi
+      - name: Push artifacts to repository
+        if: ${{ env.do_update == 'yes' }}
+        run: |
+          commit_sha=${{ github.sha }}
+          commit_sha_short="${github_sha_hash:0:7}"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add build
-          git commit -m "build ${github_sha_short}"
-          git tag "build-${github_sha_short}"
+          git commit -m "build ${commit_sha_short}"
+          git tag "build-${commit_sha_short}"
           git tag -f build-latest
       - uses: ad-m/github-push-action@master
         with:
