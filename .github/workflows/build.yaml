@@ -28,10 +28,10 @@ jobs:
           cut -d'/' -f1 build/changed_files.txt | uniq > build/changed_top_level.txt
           ( grep "mikrodatorprojekt" build/changed_top_level.txt || [ "$?" == "1" ] ) >> build/needs_update.txt
       - name: compute typst dependencies
-        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > requirements.typ
+        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > build/requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
-          cache-dependency-path: requirements.typ
+          cache-dependency-path: build/requirements.typ
       - name: build mikrodatorprojekt
         run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
       - uses: actions/upload-artifact@v4
