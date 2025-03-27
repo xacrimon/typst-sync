@@ -15,30 +15,57 @@ jobs:
   render:
     runs-on: ubuntu-latest
     outputs:
-      needs_update: ${{ steps.find_changed.outputs.needs_update }}
+      needs_update: ${{ steps.find_changed.outputs.do_update }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create build directory
         run: mkdir build
-      - id: find_changed
-        name: Find changed projects
+      - name: Cache rendered documents
+        id: cache-rendered
+        uses: actions/cache@v4
+        with:
+          path: build/rendered
+          key: build-rendered
+      - name: Find changed projects
+        id: find_changed
         run: |
           commit_sha=${{ github.sha }}
           parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
           git diff --name-only ${commit_sha} ${parent_sha} > build/changed_files.txt
+
           cut -d'/' -f1 build/changed_files.txt | uniq > build/changed_top_level.txt
           ( grep "mikrodatorprojekt" build/changed_top_level.txt || [ "$?" == "1" ] ) >> build/needs_update.txt
-          needs_update_count=$(cat build/needs_update.txt | wc -l | xargs echo -n)
-          echo "needs_update=${needs_update_count}" >> "$GITHUB_OUTPUT"
+
+          while IFS="" read -r p || [ -n "$p" ]
+          do
+            rendered_path="build/rendered/${p}.pdf"
+            if [ ! -f "${rendered_path}" ]; then
+              echo "${p}" >> build/not_cached.txt
+            fi
+          done < project-list.txt
+
+          cat build/needs_update.txt build/not_cached.txt | uniq > build/do_update.txt
+          do_update_count=$(cat build/build/do_update.txt | wc -l | xargs echo -n)
+          echo "do_update=${do_update_count}" >> "$GITHUB_OUTPUT"
       - name: Compute Typst dependencies
-        run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ | uniq > build/requirements.typ
+        run: |
+          while IFS="" read -r p || [ -n "$p" ]
+          do
+            find "$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
+          done < build/do_update.txt
+          grep -A 1 "#import .*" build/amalgam.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
           cache-dependency-path: build/requirements.typ
-      - name: Build mikrodatorprojekt
-        run: typst compile mikrodatorprojekt/main.typ build/mikrodatorprojekt.pdf
+      - name: Build projects
+        run: |
+          mkdir -p build/rendered
+          while IFS="" read -r p || [ -n "$p" ]
+          do
+            typst compile "$p/main.typ" "build/rendered/${p}.pdf"
+          done < build/do_update.txt
       - uses: actions/upload-artifact@v4
         with:
           name: build
@@ -46,7 +73,7 @@ jobs:
 
   tag:
     needs: render
-    if: ${{ needs.render.outputs.needs_update != '0' }}
+    if: ${{ needs.render.outputs.do_update != '0' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
