@@ -44,7 +44,7 @@ jobs:
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ test -z "$key_got" ]; then
+          if [ -z "$key_got" ]; then
             echo "cache miss"
             cp project-list.txt build/do_update.txt
           fi
