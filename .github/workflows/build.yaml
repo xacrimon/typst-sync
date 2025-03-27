@@ -26,6 +26,7 @@ jobs:
           echo "CHANGED:
           cat changed.txt
 
+          touch changed_top.txt
           cat changed.txt | cut -d'/' -f1 | uniq > changed_top.txt
           echo "CHANGED TOP:
           cat changed_top.txt
