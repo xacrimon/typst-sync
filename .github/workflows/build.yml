@@ -39,7 +39,7 @@ jobs:
           key_req="$key_req"
           key_got="$key_got"
 
-          if [ $exact_hit = 'true' ] then
+          if [ $exact_hit = 'true' ]; then
             echo "exact cache hit"
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
