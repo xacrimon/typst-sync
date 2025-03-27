@@ -36,9 +36,9 @@ jobs:
           git diff --name-only ${commit_sha} ${parent_sha} > build/meta/changed_files.txt
 
           cut -d'/' -f1 build/meta/changed_files.txt | uniq > build/meta/changed_top_level.txt
-          // touch
           ( grep "mikrodatorprojekt" build/meta/changed_top_level.txt || [ "$?" == "1" ] ) >> build/meta/needs_update.txt
 
+          touch build/meta/not_cached.txt
           while IFS="" read -r p || [ -n "$p" ]
           do
             rendered_path="build/rendered/${p}.pdf"
