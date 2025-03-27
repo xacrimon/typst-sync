@@ -33,7 +33,7 @@ jobs:
       - id: diff
         env:
           cache_hit: ${{ steps.restore_rendered.outputs.cache-hit }}
-          cache_full_match: ${{ steps.restore_rendered.outputs.cache-primary-key == steps.restore-rendered.outputs.cache-matched-key }}
+          cache_full_match: ${{ steps.restore_rendered.outputs.cache-primary-key == steps.restore_rendered.outputs.cache-matched-key }}
         run: |
           l_ch="$cache_hit"
           l_cfm="$cache_full_match"
