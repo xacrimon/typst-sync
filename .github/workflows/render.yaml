@@ -35,4 +35,4 @@ jobs:
           git commit -m "render ${github_sha_short}"
       - uses: ad-m/github-push-action@master
         with:
-          branch: ${{ github.sha }}
+          branch: "render-${{ github.sha }}
