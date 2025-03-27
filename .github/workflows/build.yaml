@@ -16,6 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: |
+          git diff --name-only HEAD HEAD~1 > changed.txt
+          echo "CHANGED:
+          cat changed.txt
+          cat changed.txt | cut -d'/' -f1 | uniq > changed_top.txt
+          echo "CHANGED TOP:
+          cat changed_top.txt
+          grep "mikrodatorprojekt" changed_top.txt >> needs-update.txt
+          echo "NEEDS UPDATE:"
+          cat needs-update.txt
       - run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
