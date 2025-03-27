@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build/rendered
-          key: build-rendered
+          key: build-rendered-${{ hashFiles('mikrodatorteknik/**') }}
       - name: Find changed projects
         id: find_changed
         run: |
