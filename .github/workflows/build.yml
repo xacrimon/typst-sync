@@ -47,7 +47,7 @@ jobs:
           done < project-list.txt
 
           cat build/needs_update.txt build/not_cached.txt | uniq > build/do_update.txt
-          do_update_count=$(cat build/build/do_update.txt | wc -l | xargs echo -n)
+          do_update_count=$(cat build/do_update.txt | wc -l | xargs echo -n)
           echo "do_update=${do_update_count}" >> "$GITHUB_OUTPUT"
       - name: Compute Typst dependencies
         run: |
