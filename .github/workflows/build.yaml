@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: grep -A 1 "#import .*" mikrodatorprojekt/main.typ > mikrodatorprojekt-requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
           cache-dependency-path: mikrodatorprojekt-requirements.typ
