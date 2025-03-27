@@ -33,6 +33,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add mikrodatorprojekt.pdf
           git commit -m "render ${github_sha_short}"
+          git tag "render-${github_sha_short}"
       - uses: ad-m/github-push-action@master
         with:
-          branch: "render-${{ github.sha }}"
+          tags: true
