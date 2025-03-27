@@ -59,6 +59,7 @@ jobs:
       - name: Compute Typst dependencies
         if: ${{ steps.diff.outputs.no_build != 'true' }}
         run: |
+          touch build/amalgam.typ
           while IFS="" read -r p || [ -n "$p" ]
           do
             find "projects/$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
