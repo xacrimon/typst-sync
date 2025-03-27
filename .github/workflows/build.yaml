@@ -38,6 +38,7 @@ jobs:
           git add mikrodatorprojekt.pdf
           git commit -m "build ${github_sha_short}"
           git tag "build-${github_sha_short}"
+          git tag -f build-latest
       - uses: ad-m/github-push-action@master
         with:
           force: true
