@@ -32,19 +32,19 @@ jobs:
       - id: diff
         env:
           cache_hit: ${{ steps.restore_rendered.outputs.cache-hit }}
-          cache_full_match: ${{ steps.restore_rendered.outputs.cache-primary-key == steps.restore_rendered.outputs.cache-matched-key }}
+          key_req: ${{ steps.restore_rendered.outputs.cache-primary-key }}
+          key_got: ${{ steps.restore_rendered.outputs.cache-matched-key }}
         run: |
-          l_ch="$cache_hit"
-          l_cfm="$cache_full_match"
-          echo "$l_ch"
-          echo "$l_cfm"
+          cache_hit="$cache_hit"
+          key_req="$key_req"
+          key_got="$key_got"
 
-          if [ $l_ch = 'true' ] && [ $l_cfm = 'true' ]; then
+          if [ $cache_hit = 'true' ] && [ $key_req = $key_got ]; then
             echo "case 1"
             echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ $l_ch = 'true' ] && [ $l_cfm = 'false' ]; then
+          if [ $cache_hit = 'true' ] && [ $key_req != $key_got ]; then
             echo "case 2"
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
@@ -52,7 +52,7 @@ jobs:
             grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
           fi
 
-          if [ $l_ch = 'false' ]; then
+          if [ $cache_hit = 'false' ]; then
             echo "case 3"
             cp project-list.txt build/do_update.txt
           fi
