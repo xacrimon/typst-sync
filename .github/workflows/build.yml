@@ -54,7 +54,7 @@ jobs:
             commit_sha=${{ github.sha }}
             cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
             git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
-            grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
+            grep -A 1 "projects/.*" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
           fi
       - name: Compute Typst dependencies
         if: ${{ steps.diff.outputs.no_build != 'true' }}
