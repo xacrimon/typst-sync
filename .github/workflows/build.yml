@@ -24,34 +24,48 @@ jobs:
       - name: Create build directory
         run: mkdir -p build
       - uses: actions/cache/restore@v4
-        id: restore-rendered
+        id: restore_rendered
         with:
           path: build/rendered
           key: build-rendered-${{ hashFiles('projects/**') }}
           restore-keys: |
             build-rendered-
-      - name: Find changed projects
-        if: steps.restore-rendered.outputs.cache-hit == 'true'
+      - id: diff
+        env:
+          cache_hit: ${{ steps.restore_rendered.outputs.cache-hit }}
+          cache_full_match: ${{ steps.restore_rendered.outputs.cache-primary-key == steps.restore-rendered.outputs.cache-matched-key }}
         run: |
-          commit_sha=${{ github.sha }}
-          cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
-          git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
-          grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
-      - name: Compute Typst dependencies
-        run: |
-          if [ ! -f "build/do_update.txt" ]; then
-            cp project-list.txt build/do_update.txt
+          echo "$cache_hit"
+          echo "$cache_full_match"
+
+          if [ "$cache_hit" == 'true' && "$cache_full_match" == 'true' ]; then
+            echo "no_build=true" >> "$GITHUB_OUTPUT"
           fi
 
+          if [ "$cache_hit" == 'true' && "$cache_full_match" == 'false' ]; then
+            commit_sha=${{ github.sha }}
+            cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
+            git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
+            grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
+          fi
+
+          if [ "$cache_hit" == 'false' ]; then
+            cp project-list.txt build/do_update.txt
+          fi
+      - name: Compute Typst dependencies
+        if: ${{ steps.diff.outputs.no_build != 'true' }}
+        run: |
           while IFS="" read -r p || [ -n "$p" ]
           do
             find "projects/$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
           done < build/do_update.txt
           grep -A 1 "#import .*" build/amalgam.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
+        if: ${{ steps.diff.outputs.no_build != 'true' }}
         with:
           cache-dependency-path: build/requirements.typ
       - name: Build projects
+        if: ${{ steps.diff.outputs.no_build != 'true' }}
         run: |
           mkdir -p build/rendered
           while IFS="" read -r p || [ -n "$p" ]
@@ -60,6 +74,7 @@ jobs:
           done < build/do_update.txt
           echo "${{ github.sha }}" > build/rendered/commit_sha.txt
       - uses: actions/cache/save@v4
+        if: ${{ steps.diff.outputs.no_build != 'true' }}
         with:
           path: build/rendered
           key: build-rendered-${{ hashFiles('projects/**') }}
