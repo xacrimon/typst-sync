@@ -1,0 +1,15 @@
+name: render
+on: push
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: typst-community/setup-typst@v4
+        with:
+          cache-dependency-path: mikrodatorprojekt-requirements.typ
+      - run: typst compile mikrodatorprojekt/main.typ mikrodatorprojekt.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mikrodatorprojekt
+          path: mikrodatorprojekt.pdf
