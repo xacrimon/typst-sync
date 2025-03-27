@@ -46,7 +46,7 @@ jobs:
 
   tag:
     needs: render
-    if: ${{ needs.render.outputs.needs_update != "0" }}
+    if: ${{ needs.render.outputs.needs_update != '0' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
