@@ -3,7 +3,7 @@
 #let abstract = lorem(100)
 
 #show: elsearticle.with(
-  title: "Title of the paper (test 15)",
+  title: "Title of the paper (test 16)",
   authors: (
     (
       name: "A. Author",
