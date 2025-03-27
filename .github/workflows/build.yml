@@ -21,52 +21,46 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create build directory
-        run: mkdir -p build/meta
-      - name: Cache rendered documents
-        id: cache-rendered
-        uses: actions/cache@v4
+        run: mkdir -p build
+      - uses: actions/cache/restore@v4
+        id: restore-rendered
         with:
           path: build/rendered
-          key: build-rendered-${{ hashFiles('mikrodatorprojekt/**') }}
+          key: build-rendered-${{ hashFiles('projects/**') }}
+          restore_keys: |
+            build-rendered-
       - name: Find changed projects
-        id: find_changed
+        if: steps.restore-rendered.outputs.cache-hit == 'true'
         run: |
           commit_sha=${{ github.sha }}
-          parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
-          git diff --name-only ${commit_sha} ${parent_sha} > build/meta/changed_files.txt
-
-          cut -d'/' -f1 build/meta/changed_files.txt | uniq > build/meta/changed_top_level.txt
-          ( grep "mikrodatorprojekt" build/meta/changed_top_level.txt || [ "$?" == "1" ] ) >> build/meta/needs_update.txt
-
-          touch build/meta/not_cached.txt
-          while IFS="" read -r p || [ -n "$p" ]
-          do
-            rendered_path="build/rendered/${p}.pdf"
-            if [ ! -f "${rendered_path}" ]; then
-              echo "${p}" >> build/meta/not_cached.txt
-            fi
-          done < project-list.txt
-
-          cat build/meta/needs_update.txt build/meta/not_cached.txt | uniq > build/meta/do_update.txt
-          do_update_count=$(cat build/meta/do_update.txt | wc -l | xargs echo -n)
-          echo "do_update=${do_update_count}" >> "$GITHUB_OUTPUT"
+          cache_commit_sha=$(cat build/rendered/commit_sha.txt | xargs echo -n)
+          git diff --name-only ${commit_sha} ${cache_commit_sha} > build/changed_files.txt
+          grep -A 1 "projects/.+" build/changed_files.txt | cut -d'/' -f2 | uniq > build/do_update.txt
       - name: Compute Typst dependencies
         run: |
+          if [ ! -f "build/do_update.txt" ]; then
+            cp project-list.txt build/do_update.txt
+          fi
+
           while IFS="" read -r p || [ -n "$p" ]
           do
-            find "$p" -type f -name "*.typ" -exec cat {} + >> build/meta/amalgam.typ
-          done < build/meta/do_update.txt
-          grep -A 1 "#import .*" build/meta/amalgam.typ | uniq > build/meta/requirements.typ
+            find "$p" -type f -name "*.typ" -exec cat {} + >> build/amalgam.typ
+          done < build/do_update.txt
+          grep -A 1 "#import .*" build/amalgam.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
         with:
-          cache-dependency-path: build/meta/requirements.typ
+          cache-dependency-path: build/requirements.typ
       - name: Build projects
         run: |
           mkdir -p build/rendered
           while IFS="" read -r p || [ -n "$p" ]
           do
             typst compile "$p/main.typ" "build/rendered/${p}.pdf"
-          done < build/meta/do_update.txt
+          done < build/do_update.txt
+          echo "${{ github.sha }}" > build/rendered/commit_sha.txt
+      - uses: actions/cache/save@v4
+        with:
+          key: build-rendered-${{ hashFiles('projects/**') }}
       - uses: actions/upload-artifact@v4
         with:
           name: build
