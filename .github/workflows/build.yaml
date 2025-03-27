@@ -3,8 +3,14 @@ on:
   push:
     branches:
       - main
+
+concurrency:
+  group: build-workflow
+  cancel-in-progress: true
+
 permissions:
   contents: write
+
 jobs:
   render:
     runs-on: ubuntu-latest
