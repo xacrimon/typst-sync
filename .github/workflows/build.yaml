@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - run: |
           commit_sha=${{ github.sha }}
           parent_sha=$(git rev-parse "${commit_sha}^" | xargs echo -n)
