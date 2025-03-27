@@ -30,6 +30,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: build
+          path: build
       - run: |
           github_sha_hash=${{ github.sha }}
           github_sha_short="${github_sha_hash:0:7}"
