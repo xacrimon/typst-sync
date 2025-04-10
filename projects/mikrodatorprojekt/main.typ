@@ -1,154 +1,107 @@
 #import "@preview/elsearticle:0.4.2": *
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.1": *
+
+#set text(lang: "se")
+
+#show: codly-init.with()
+
+#codly(languages: codly-languages, zebra-fill: none)
+
+#let appendix(body) = {
+  set heading(numbering: "A", supplement: [Appendix])
+  counter(heading).update(0)
+  body
+}
 
 #let abstract = lorem(100)
 
 #show: elsearticle.with(
-  title: "Title of the paper (test 16)",
+  title: "Sidescroller på en mikrokontroller",
+
   authors: (
     (
-      name: "A. Author",
-      affiliation: "University A, City A, Country A",
-      corr: "a.author@univa.edu",
-      id: "a",
+      name: "J. Wejdenstål",
+      affiliation: "Linköpings Universitet",
     ),
-    (
-      name: "B. Author",
-      affiliation: "University B, City B, Country B",
-      id: "b"
-    ),
-    (name: lorem(2)),
-    (name: lorem(3)),
-    (name: "A. Author"),
-    (name: "A. Author"),
+    ( name: "K. Westberg" ),
+    ( name: "E. Allison" ),
+    ( name: "G. Gunnarson", ),
   ),
-  journal: "Name of the Journal",
   abstract: abstract,
-  keywords: ("keyword 1", "keyword 2"),
+  // keywords: ("keyword 1", "keyword 2"),
   format: "review",
   // line-numbering: true,
 )
 
-= Introduction
+#outline()
 
-#lorem(100)
+= Inleding
 
-= Section 1
-
-#lorem(50)
-
-== Subsection 1
-
-#lorem(10) (see @eq1) @Aut10.
-
-$
-y = a x +b
-$ <eq1>
-where ...
-
-$
-  x = integral_0^x d x #<eqa>\
-  (u v)' = u' v + v' u #<eqb>
-$ <eq2>
-
-@eqa is a simple integral, while @eqb is the derivative of a product of two functions. These equations are grouped in @eq2.
-
-== Features
-
-=== Table
-
-Below is @tab:tab1.
-
-#let tab1 = {
-  table(
-  columns: 3,
-  table.header(
-    [*Header 1*],
-    [*Header 2*],
-    [*Header 3*],
-  ),
-  [Row 1], [12.0], [92.1],
-  [Row 2], [16.6], [104],
-)
+```rust
+pub fn main() {
+    println!("Hello, world!");
 }
+```
 
-#figure(
-    tab1,
-    kind: table,
-    caption : [Example]
-) <tab:tab1>
+== Blockschema
 
-=== Figures
+== Kravspecifikation
 
-Below is @fig:logo.
+= Översikt
 
-#figure(
-  image("images/typst-logo.svg", width: 50%),
-  caption : [Typst logo - Credit: \@fenjalien]
-) <fig:logo>
+== Uppdeling av arbetet
 
-=== Subfigures
+== Komponenternas placering
 
-Below are @figa and @figb, which are part of @fig:typst.
+= Projektets delar
 
-#subfigure(
-figure(image("images/typst-logo.svg"), caption: []), <figa>,
-figure(image("images/typst-logo.svg"), caption: []), <figb>,
-columns: (1fr, 1fr),
-caption: [(a) Left image and (b) Right image],
-label: <fig:typst>,
-)
+== Processor ATmega16A
+
+== LCD
+
+== SSD1309
+
+== Kontrollknappar
+
+= Kopplingsschema
+
+= Diskussion
+
+#bibliography("refs.bib")
 
 #show: appendix
 
-= Appendix A
+#outline(target: heading.where(supplement: [Appendix]), title: [Appendix])
 
-== Figures
+= LCD.inc
 
-In @fig:app
+#raw(read("code/LCD.inc", encoding: "utf8"), block: true, lang: "asm")
 
-#figure(
-  image("images/typst-logo.svg", width: 50%),
-  caption : [Books cover]
-) <fig:app>
+= error.asm
 
-== Subfigures
+#raw(read("code/error.asm", encoding: "utf8"), block: true, lang: "asm")
 
-Below are @figa-app and @figb-app, which are part of @fig:typst-app.
+= functions.inc
 
-#subfigure(
-figure(image("images/typst-logo.svg"), caption: []), <figa-app>,
-figure(image("images/typst-logo.svg"), caption: []), <figb-app>,
-columns: (1fr, 1fr),
-caption: [(a) Left image and (b) Right image],
-label: <fig:typst-app>,
-)
+#raw(read("code/functions.inc", encoding: "utf8"), block: true, lang: "asm")
 
-== Tables
+= i2c.asm
 
-In @tab:app
+#raw(read("code/i2c.asm", encoding: "utf8"), block: true, lang: "asm")
 
-#figure(
-    tab1,
-    kind: table,
-    caption : [Example]
-) <tab:app>
+= m_util.inc
 
-== Equations
+#raw(read("code/m_util.inc", encoding: "utf8"), block: true, lang: "asm")
 
-In @eq
+= main.asm
 
-$
-y = f(x)
-$ <eq>
+#raw(read("code/main.asm", encoding: "utf8"), block: true, lang: "asm")
 
-#nonumeq[$
-    y = g(x)
-    $
-]
+= psm.asm
 
-$
-y = f(x) \
-y = g(x)
-$
+#raw(read("code/psm.asm", encoding: "utf8"), block: true, lang: "asm")
 
-#bibliography("refs.bib")
+= ssd1309.asm
+
+#raw(read("code/ssd1309.asm", encoding: "utf8"), block: true, lang: "asm")
