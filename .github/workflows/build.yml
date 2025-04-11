@@ -75,7 +75,9 @@ jobs:
           mkdir -p build/rendered
           while IFS="" read -r p || [ -n "$p" ]
           do
-            typst compile "projects/$p/main.typ" "build/rendered/${p}.pdf"
+            cd "projects/$p"
+            typst compile "main.typ" "../../build/rendered/${p}.pdf"
+            cd ../..
           done < build/do_update.txt
           echo "${{ github.sha }}" > build/rendered/commit_sha.txt
       - uses: actions/cache/save@v4
