@@ -34,15 +34,9 @@
   // line-numbering: true,
 )
 
-#outline()
+#outline(target: selector(heading).before(heading.where(body: [Appendix])))
 
 = Inleding
-
-```rust
-pub fn main() {
-    println!("Hello, world!");
-}
-```
 
 == Blockschema
 
@@ -61,6 +55,10 @@ pub fn main() {
 == LCD
 
 == SSD1309
+
+== Simulering av spel
+
+== Rendering av grafik
 
 == Kontrollknappar
 
