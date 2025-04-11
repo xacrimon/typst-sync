@@ -67,8 +67,6 @@ jobs:
           grep -A 1 "#import .*" build/amalgam.typ | uniq > build/requirements.typ
       - uses: typst-community/setup-typst@v4
         if: ${{ steps.diff.outputs.no_build != 'true' }}
-        with:
-          cache-dependency-path: build/requirements.typ
       - name: Build projects
         if: ${{ steps.diff.outputs.no_build != 'true' }}
         run: |
