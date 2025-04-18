@@ -165,6 +165,31 @@ Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den
 
 == Control flow
 
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvänliga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initering och har ingen väg ut, programmet stannar kvar i den tills processorn återställs eller tappar ström.
+
+#linebreak()
+Dessa steg är:
+- Inläsning samt hantering av inputs (dvs knapptryck) från hårdvara
+- Simulering av fysik såsom gravitation och accelelration
+- Flytta av spelaren framåt längs spelbanan
+- Procedurell generation av nästkommande del av spelbanan
+- Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
+- Överför VRAM över SPI till SSD1309s interna GDDRAM
+- Testa om spelaren kolliderar med ett hinder och har förlorat
+
+```asm
+game_update:
+	call update_player
+	call update_player_input
+	call step_cacti
+	call clear_vram
+	call draw_frame
+	call write_frame
+	...
+	call test_death
+	ret
+```
+
 == Interaktion med hårdvara
 
 == Spelsimulering
