@@ -196,6 +196,88 @@ game_update:
 
 == Rendering
 
+För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefer forsätter detta för för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+
+Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixels (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7).
+
+```asm
+; x/y i r16/r17
+light_pixel:
+	mov r23, r17
+	asr r17
+	asr r17
+	asr r17
+	ldi r18, 5
+	sub r18, r17
+	LDIW Z, VRAM
+light_pixel_loop:
+	ldi r19, 128
+	add ZL, r19
+	ldi r19, 0
+	adc ZH, r19
+	dec r18
+	brne light_pixel_loop
+  ;---
+	add ZL, r16
+	ldi r20, 0
+	adc ZH, r20
+	;---
+	ld r21, Z
+	andi r23, 0b0000_0111
+	;---
+	ldi r22, 0b1000_0000
+light_pixel_shift_loop:
+	cpi r23, 0
+	breq light_pixel_end
+	lsr r22
+	dec r23
+	rjmp light_pixel_shift_loop
+light_pixel_end:
+	or r21, r22
+	st Z, r21
+	ret
+```
+
+Spelarens figur i sitt normaltillstånd utgörs av en 5x5 rektangel av tända pixlar och renderas således utav följande kod:
+
+```asm
+draw_cube_1:
+	ldi r16, POS_X
+	lds r17, POS_Y
+	ldi YL, 5
+	sbis PIND, 1
+	ldi YL, 3
+	ldi r25, 5
+in2:
+	mov r24, YL
+in1:
+	push r16
+	push r17
+	rcall light_pixel
+	pop r17
+	pop r16
+	subi r17, -1
+	dec r24
+	brne in1
+	subi r16, -1
+	sub r17, YL
+	dec r25
+	brne in2
+	ret
+```
+
+#linebreak()
+Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, under normala omständigheter är dessa följande:
+- Himmel, ovan spelaren
+- Mark, under spelaren
+- Spelarens figur
+- Alla befintliga hinder, dessa lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
+
+#figure(
+  image("images/render.png", width: 60%),
+  caption: [Ett frame, renderad och visad på OLED skärmen.],
+)
+
 = Diskussion
 
 == Misstag under projektet
