@@ -17,7 +17,7 @@
 #let abstract = lorem(100)
 
 #show: elsearticle.with(
-  title: "Sidescroller på en mikrokontroller",
+  title: "Mikrodatorprojekt - Dino Run",
 
   authors: (
     (
@@ -38,35 +38,76 @@
 
 = Inleding
 
+Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
+
+== Beskrivning av spel
+
+Denna rapport beskriver hur ett ”Side-scroller” spel konstruerades i kursen mikrodatorprojekt TSIU51. Spelet använder sig av en OLED display (ssd1309) som spelplan. LCD för att skriva ut en spelmeny. Två tryckknappar för att kunna hoppa och ducka för hinder. Spelet går ut på att försöka undvika de hinder som kommer och komma så långt som möjligt.  Vid en kollision med hinder så kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet igen.
+
+=== Bakgrund
+
+Vid uppstart av projektet så hölls ett möte med mål att fundera ut vad för spel som vi ville försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett ”side-scroller” spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator samt handledare.
+
+TODO: infoga bild
+
+=== Uppdelning av arbetet
+
+Vid starten av projektet delades arbetet upp i två grupper. Där vardera grupper började jobba på varsin display. Då detta var något gruppen trodde skulle ta en stor tid av arbetsbelastningen, vilket stämde. När sedan displayerna var i gång och fungerande arbetade båda grupperna med lättförståeliga kodfunktioner till vardera displayen, så hela gruppen kunde arbeta med båda displayerna. Efter detta integrerade vi ihop våra respektive koder i en delad fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Till sist arbetade hela gruppen åt själva spelet och dess funktioner och logik.
+
 == Blockschema
+
+Nedanstående figur visar ett blockschema över de komponenter som används i projektet, och övergripande bild på deras interna kommunikation med varandra.  I nästa avsnitt beskrivs varje komponent för sig.
+
+TODO: infoga blockschema
 
 == Kravspecifikation
 
-= Översikt
+Under projektets start bestämdes vissa krav som fanns på spelets funktionalitet. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inget nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
 
-== Uppdeling av arbetet
+Skall-krav:
+1. Animerad figur och en spelplan som scrollar åt höger under spelets gång. Detta skall renderas på den grafiska displayen. 
+2. Den högra tryckknappen får spelarens figur att hoppa.
+3. Den vänstra tryckknappen får spelarens figur att ducka.
+4. Poängsystem som uppdateras i realtid och skrivs ut på textdisplayen.
+5. Spelmeny på textdisplayen för att starta spelet samt visa grundläggande info. 
+6. Ljudeffekt när man förlorar.
 
-== Komponenternas placering
+Utökade krav:
+1. Spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på 47C16.
+2. Mer ingående ljudeffekter under spelet samt vid start av spelet.
+
 
 = Projektets delar
 
+== DAVID-kort
+
 == Processor ATmega16A
 
-== LCD
+== TWI (I2C)
 
-== SSD1309
+== LCD HD4480 (textdisplay)
 
-== Simulering av spel
+== SSD1309 (grafisk display)
 
-== Rendering av grafik
+== Tryckknappar L/R
 
-== Kontrollknappar
+== Högtalare
 
-= Kopplingsschema
+== Spelsimulering
+
+== Rendering
+
+= Beskrivning av programvara
+
+== Control flow
+
+== Interaktion med hårdvara
 
 = Diskussion
 
 #bibliography("refs.bib")
+
+TODO: add references
 
 #show: appendix
 
