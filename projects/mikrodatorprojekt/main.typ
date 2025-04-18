@@ -14,7 +14,9 @@
   body
 }
 
-#let abstract = lorem(100)
+#let abstract = [
+  Gruppen har implementerat ett spel med realtidsgrafik inspirerat av Dino Run spelet som återfinns i ett easter egg i webbläsaren Google Chrome. Vi redogör för hårdvara, kopplingar, programvara och metoder som använts för att realisera vår idé på ATmega16A, DAvid-kortet och en grafisk OLED-display.
+]
 
 #show: elsearticle.with(
   title: "Mikrodatorprojekt - Dino Run",
@@ -29,14 +31,12 @@
     ( name: "G. Gunnarson", ),
   ),
   abstract: abstract,
-  // keywords: ("keyword 1", "keyword 2"),
   format: "review",
-  // line-numbering: true,
 )
 
 #outline(target: selector(heading).before(heading.where(body: [Appendix])))
 
-= Inleding
+= Översikt
 
 Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
 
@@ -120,6 +120,29 @@ Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera 
 För att få en utskrift på displayen behövs det förs göras en initiering. Där man får välja om man vill arbeta med 4 eller 8 bitars mode, hur många rader man vill använda, om bakgrundsbelysningen ska vara på eller av med mera. Man kan även välja själv om man vill skriva till specifika platser på displayen eller om man vill ha så den skriver från vänster till höger. 
 
 == SSD1309 (grafisk display)
+
+En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Detta är displayen där själva spelet tar plats.
+
+#figure(
+  image("damatrix-cpu-schematic.png", width: 50%),
+  caption: [PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn.],
+)
+
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på så vis uppdateras innehållet på skärmen kontinueligt.
+
+#figure(
+  image("damatrix-connector-schematic.png", width: 50%),
+  caption: [Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten.],
+)
+
+Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt advancerat kommandosystem för att möjliggöra advancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
+
+I stora drag så skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den, dessa återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta början displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+
+```asm
+INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
+.equ INIT_PARAMS_LEN = 18
+```
 
 == Tryckknappar L/R
 
