@@ -20,7 +20,6 @@
 
 #show: elsearticle.with(
   title: "Mikrodatorprojekt - Dino Run",
-
   authors: (
     (
       name: "J. Wejdenstål",
@@ -50,7 +49,7 @@ Vid uppstart av projektet så hölls ett möte med mål att fundera ut vad för 
 
 #figure(
   image("images/chrome.png", width: 80%),
-  caption: [En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt.],
+  caption: [_En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt_.],
 )
 
 === Uppdelning av arbetet
@@ -63,7 +62,7 @@ Nedanstående figur visar ett blockschema över de komponenter som används i pr
 
 #figure(
   image("images/blockschema.png", width: 90%),
-  caption: [Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren.],
+  caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],
 )
 
 == Kravspecifikation
@@ -112,7 +111,7 @@ Denna display är en LCD display vilket betyder att det är en “Liquid Crystal
 
 #figure(
   image("images/hd44780-schematic.png", width: 100%),
-  caption: [Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster).],
+  caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
 )
 
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rader. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken ska skivas ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
@@ -125,14 +124,14 @@ En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning 
 
 #figure(
   image("damatrix-cpu-schematic.png", width: 50%),
-  caption: [PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn.],
+  caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
 )
 
 Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på så vis uppdateras innehållet på skärmen kontinueligt.
 
 #figure(
   image("damatrix-connector-schematic.png", width: 50%),
-  caption: [Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten.],
+  caption: [_Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten._],
 )
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt advancerat kommandosystem för att möjliggöra advancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
@@ -154,7 +153,7 @@ Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den pi
 
 #figure(
   image("images/speaker-schematic.png", width: 50%),
-  caption: [Kopplingsschema för högtalare & IR-sändare.],
+  caption: [_Kopplingsschema för högtalare & IR-sändare._],
 )
 
 Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern *SPEAKER JP*.
@@ -165,13 +164,13 @@ Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den
 
 == Control flow
 
-Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvänliga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initering och har ingen väg ut, programmet stannar kvar i den tills processorn återställs eller tappar ström.
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvänliga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initeringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
 
 #linebreak()
 Dessa steg är:
 - Inläsning samt hantering av inputs (dvs knapptryck) från hårdvara
 - Simulering av fysik såsom gravitation och accelelration
-- Flytta av spelaren framåt längs spelbanan
+- Flytt av spelaren framåt längs spelbanan
 - Procedurell generation av nästkommande del av spelbanan
 - Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
@@ -194,7 +193,7 @@ game_update:
 
 == Rendering
 
-För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefer forsätter detta för för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
 Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en `or` instruktion för att sätta biten till 1.
 
@@ -273,7 +272,7 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, und
 
 #figure(
   image("images/render.png", width: 60%),
-  caption: [Ett frame, renderad och visad på OLED skärmen.],
+  caption: [_En frame, renderad och visad på OLED skärmen._],
 )
 
 = Diskussion
