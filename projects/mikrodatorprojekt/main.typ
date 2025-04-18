@@ -190,15 +190,13 @@ game_update:
 	ret
 ```
 
-== Interaktion med hårdvara
-
 == Spelsimulering
 
 == Rendering
 
 För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefer forsätter detta för för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
-Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7).
+Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en `or` instruktion för att sätta biten till 1.
 
 ```asm
 ; x/y i r16/r17
@@ -303,8 +301,6 @@ Följaktligen så kan vi fastställa att samarbetet i gruppen fungerade mycket v
 Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Spelet som vi har konstruerat har varit över förväntan. Även fast vi inte hann implementera de utökade kraven så känner vi att slutprodukten är väldigt lik det vi hade tänkt att projektet skulle spegla när vi började att planera i starten av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi konstaterade att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
 
 #bibliography("refs.bib")
-
-TODO: add references
 
 #show: appendix
 
