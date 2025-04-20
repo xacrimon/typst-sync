@@ -116,18 +116,18 @@ Denna display är en LCD display vilket betyder att det är en “Liquid Crystal
 
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rader. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken ska skivas ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
-För att få en utskrift på displayen behövs det förs göras en initiering. Där man får välja om man vill arbeta med 4 eller 8 bitars mode, hur många rader man vill använda, om bakgrundsbelysningen ska vara på eller av med mera. Man kan även välja själv om man vill skriva till specifika platser på displayen eller om man vill ha så den skriver från vänster till höger. 
+För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill utskrift från vänster till höger. 
 
 == SSD1309 (grafisk display)
 
-En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Detta är displayen där själva spelet tar plats.
+En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Det är på denna display som spelets grafik finns.
 
 #figure(
   image("damatrix-cpu-schematic.png", width: 50%),
   caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
 )
 
-Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på så vis uppdateras innehållet på skärmen kontinueligt.
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinueligt.
 
 #figure(
   image("damatrix-connector-schematic.png", width: 50%),
@@ -136,7 +136,7 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt advancerat kommandosystem för att möjliggöra advancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
 
-I stora drag så skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den, dessa återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta början displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag så skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
 ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
@@ -158,7 +158,7 @@ Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den pi
 
 Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern *SPEAKER JP*.
 
-Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port *PB1* på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra utan att samverkan hanteras i mjukvara eller hårdvara. 
+Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port *PB1* på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
 
 = Beskrivning av programvara
 
@@ -169,7 +169,7 @@ Bortsett från den minimala kod som krävs för att initiera processorn och anna
 #linebreak()
 Dessa steg är:
 - Inläsning samt hantering av inputs (dvs knapptryck) från hårdvara
-- Simulering av fysik såsom gravitation och accelelration
+- Simulering av fysik såsom gravitation och acceleration
 - Flytt av spelaren framåt längs spelbanan
 - Procedurell generation av nästkommande del av spelbanan
 - Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
@@ -193,7 +193,7 @@ game_update:
 
 == Rendering
 
-För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
 Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en `or` instruktion för att sätta biten till 1.
 
@@ -235,7 +235,7 @@ light_pixel_end:
 	ret
 ```
 
-Spelarens figur i sitt normaltillstånd utgörs av en 5x5 rektangel av tända pixlar och renderas således utav följande kod:
+Spelarens figur i sitt normaltillstånd utgörs av en 5x5 kub av tända pixlar och renderas således utav följande kod:
 
 ```asm
 draw_cube_1:
@@ -279,15 +279,15 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, und
 
 == Misstag under projektet
 
-Vid starten av utvecklingen så hade vi stora problem med initieringen av de båda skärmarna.  Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas.
+Vid starten av utvecklingen så hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas.
 
-Vid starten av projektet kämpade även gruppen med hårdvara som var defekt. Det var den SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled displayen var defekt och vi fick en ny som vi använde under projektets gång.
+Vid starten av projektet kämpade även gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
 Ett annat misstag som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixels skärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade lyckats skapa en punkt som hoppade och hinder. Efter en tids arbete utan större framgång så diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick audiens för.
 
 == Förslag till förbättringar
 
-Några förbättringar som vi under projektet kunde ha innefattat är just de utökade kraven. Att skapa en lista med alla ”high-score” hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen score och kan lätt se vem som har lyckats bäst och sprungit längst.  
+Några förbättringar som vi under projektet kunde ha innefattar just de utökade kraven. Att skapa en lista med alla ”high-score” hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen score och kan lätt se vem som har lyckats bäst och sprungit längst.  
 
 En annan förbättring hade varit att skapa mer ingående ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Vid mer tid hade vi kunnat skapa olika ljud för spel-loopen, hoppljud och duckljud. Vi ansåg rätt så snabbt när spelet skapades att våra skall-krav var rätt så avancerade. Effekten av detta var att när skall-kraven var implementerade så kände gruppen sig rätt så nöjda med projektet.
 
