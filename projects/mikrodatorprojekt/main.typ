@@ -89,13 +89,13 @@ I detta projekt har det använts en LCD-display HD4480, OLED-display ssd1309, en
 
 == DAvid-kort
 
-I detta projekt har ett David-kort använts. Vilket är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs och utgångs komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor, men bytes sedan ut mot processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+I detta projekt har ett David-kort använts. Vilket är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs och utgångs komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
 == Processor ATmega16A
 
 Atmega16 är hjärnan på DAvid-kortet och styr alla ingångs och utgångs komponenter, med antingen sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kb flashminne för lagring av programkod, 1 kb SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
-Atmega16 ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller. Att vara en 8-bitars mikrokontroller byter att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
+Atmega16 ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller. Att vara en 8-bitars mikrokontroller innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
 == TWI (I2C)
 
@@ -103,7 +103,7 @@ TWI (Two Wire Interface) är ett kommunikationsprotokoll som möjliggör dataöv
 
 TWI-bussen använder endast två ledare en SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data, det är själva överföringen av data och är i vilande tillstånd hög. Medan SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras i fallande flank på SCL och läses av i stigande flank.
 
-En transaktion på TWI-bussen inleds alltid av masterenheten. Där mastern för skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheterna adress. Följt av en R/W-bit. Därefter kommer en ack bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, där beroende på R/W skickas data eller tas det emot data. Data skickas och tas emot med en sekvens av en byte. Där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL. Vilket frigör TWI-bussen för nya transaktioner.
+En transaktion på TWI-bussen inleds alltid av masterenheten. Där mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Följt av en R/W-bit. Därefter kommer en ack bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, där beroende på R/W skickas data eller tas det emot data. Data skickas och tas emot med en sekvens av en byte. Där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL. Vilket frigör TWI-bussen för nya transaktioner.
 
 == LCD HD4480 (textdisplay)
 
