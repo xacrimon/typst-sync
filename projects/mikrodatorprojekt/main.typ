@@ -299,7 +299,19 @@ Följaktligen så kan vi fastställa att samarbetet i gruppen fungerade mycket v
 
 Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Spelet som vi har konstruerat har varit över förväntan. Även fast vi inte hann implementera de utökade kraven så känner vi att slutprodukten är väldigt lik det vi hade tänkt att projektet skulle spegla när vi började att planera i starten av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi konstaterade att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
 
-#bibliography("refs.bib")
+= Referenslista
+
+Josefsson, M. (2025). Datorteknik DAvid Hårdvarubeskrivning. [Internt material]
+
+Josefsson, M. (2024 16). DAvid/Dart principschema. [Internt material]
+
+Atmel Corporation. (2002). ATmega16A datasheet. [Internt material]
+
+Solomon Systech Limited. (2011). SSD1309 datasheet. [Internt material]
+
+Hitachi, Ltd. (1999). HD44780U datasheet. 
+[Internt material]
+
 
 #show: appendix
 
