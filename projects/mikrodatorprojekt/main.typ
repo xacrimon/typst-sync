@@ -45,7 +45,7 @@ Denna rapport beskriver hur ett ”Side-scroller” spel konstruerades i kursen 
 
 === Bakgrund
 
-Vid uppstart av projektet så hölls ett möte med mål att fundera ut vad för spel som vi ville försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett ”side-scroller” spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator samt handledare.
+Vid uppstart av projektet så hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett ”side-scroller” spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure(
   image("images/chrome.png", width: 80%),
