@@ -37,6 +37,22 @@
 
 #outline(target: selector(heading).before(heading.where(body: [Appendix])))
 
+*Figurlista*
+
+- Fig. 1: Inspirationsbild s. 4
+
+- Fig. 2: Blockschema s. 5
+
+- Fig. 3: Schema för LCD HD44780 s. 9
+
+- Fig. 4: Processor <> SPI diagram s. 10
+
+- Fig. 5: SPI-kommunikation vid DAMatrix-kontakten s. 10
+
+- Fig. 6: Schema för högtalare & IR-sändare s. 12
+
+- Fig. 7: Bild av spelet, grafiskt renderat på skärmen s. 16
+
 = Översikt
 
 Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
@@ -191,8 +207,6 @@ game_update:
 	ret
 ```
 
-== Spelsimulering
-
 == Rendering
 
 För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
@@ -303,15 +317,15 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 = Referenslista
 
-Josefsson, M. (2025). Datorteknik DAvid Hårdvarubeskrivning. [Internt material]
+- Josefsson, M. (2025). Datorteknik DAvid Hårdvarubeskrivning. [Internt material]
 
-Josefsson, M. (2024 16). DAvid/Dart principschema. [Internt material]
+- Josefsson, M. (2024 16). DAvid/Dart principschema. [Internt material]
 
-Atmel Corporation. (2002). ATmega16A datasheet. [Internt material]
+- Atmel Corporation. (2002). ATmega16A datasheet. [Internt material]
 
-Solomon Systech Limited. (2011). SSD1309 datasheet. [Internt material]
+- Solomon Systech Limited. (2011). SSD1309 datasheet. [Internt material]
 
-Hitachi, Ltd. (1999). HD44780U datasheet. 
+- Hitachi, Ltd. (1999). HD44780U datasheet. 
 [Internt material]
 
 
