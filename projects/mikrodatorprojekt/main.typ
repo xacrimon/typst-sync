@@ -55,15 +55,15 @@
 
 = Översikt
 
-Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
+Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt, TSIU51. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
 
 == Beskrivning av spel
 
-Denna rapport beskriver hur ett ”Side-scroller” spel konstruerades i kursen mikrodatorprojekt TSIU51. Spelet använder sig av en OLED display (ssd1309) som spelplan. LCD för att skriva ut en spelmeny. Två tryckknappar för att kunna hoppa och ducka för hinder. Spelet går ut på att försöka undvika de hinder som kommer och komma så långt som möjligt.  Vid en kollision med hinder så kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet igen.
+Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan. LCD för att skriva ut en spelmeny. Två tryckknappar för att kunna hoppa och ducka för hinder. Spelet går ut på att försöka undvika de hinder som kommer och komma så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet igen.
 
 === Bakgrund
 
-Vid uppstart av projektet så hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett ”side-scroller” spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
+Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure(
   image("images/chrome.png", width: 80%),
@@ -72,7 +72,7 @@ Vid uppstart av projektet så hölls ett möte med mål att fundera ut vilken so
 
 === Uppdelning av arbetet
 
-Vid starten av projektet delades arbetet upp i två grupper. Där vardera grupper började jobba på varsin display. Då detta var något gruppen trodde skulle ta en stor tid av arbetsbelastningen, vilket stämde. När sedan displayerna var i gång och fungerande arbetade båda grupperna med lättförståeliga kodfunktioner till vardera displayen, så hela gruppen kunde arbeta med båda displayerna. Efter detta integrerade vi ihop våra respektive koder i en delad fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Till sist arbetade hela gruppen åt själva spelet och dess funktioner och logik.
+Vid starten av projektet delades arbetet upp i två grupper. Där vardera grupper började jobba på varsin display. Då detta var något gruppen trodde skulle ta en stor tid av arbetsbelastningen, vilket stämde. När sedan displayerna var i gång och fungerande arbetade båda grupperna med lättförståeliga kodfunktioner till vardera displayen, så hela gruppen kunde arbeta med båda displayerna. Efter detta integrerade vi ihop våra respektive koder i en delad fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Till sist arbetade hela gruppen med resterande delar i spelet, deras funktioner och logik.
 
 == Blockschema
 
@@ -107,7 +107,7 @@ I detta projekt har det använts en LCD-display HD4480, OLED-display ssd1309, en
 
 == DAvid-kort
 
-I detta projekt har ett David-kort använts. Vilket är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs och utgångs komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+I detta projekt har ett DAvid-kort använts. Vilket är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs och utgångs komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
 == Processor ATmega16A
 
@@ -163,7 +163,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-På David kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. Medan L och R är direkt kopplade till processorns I/O pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga, samt i tryckläge låga.
+På DAvid kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. Medan L och R är direkt kopplade till processorns I/O pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga, samt i tryckläge låga.
 
 == Högtalare
 
