@@ -63,7 +63,7 @@ Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använd
 
 === Bakgrund
 
-Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosuar Game. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
+Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosuar Game vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure(
   image("images/chrome.png", width: 80%),
@@ -72,7 +72,7 @@ Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sort
 
 === Uppdelning av arbetet
 
-Vid starten av projektet delades arbetet upp i två grupper. Där vardera grupper började jobba på varsin display. Då detta var något gruppen trodde skulle ta en stor tid av arbetsbelastningen, vilket stämde. När sedan displayerna var i gång och fungerande arbetade båda grupperna med lättförståeliga kodfunktioner till vardera displayen, så hela gruppen kunde arbeta med båda displayerna. Efter detta integrerade vi ihop våra respektive koder i en delad fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Till sist arbetade hela gruppen med resterande delar i spelet, deras funktioner och logik.
+Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på att intiera de två displayer som projektet använde sig av. Anledningen för detta var att gruppen trodde att detta skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga kodfunktioner till vardera display. Anledningen för detta var att hela gruppen skulle kunna arbeta med båda displayerna. Efter detta integrerade vi våra respektive koder i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.
 
 == Blockschema
 
