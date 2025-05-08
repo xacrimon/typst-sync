@@ -59,7 +59,7 @@ Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har
 
 == Beskrivning av spel
 
-Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan. LCD för att skriva ut en spelmeny. Två tryckknappar för att kunna hoppa och ducka för hinder. Spelet går ut på att försöka undvika de hinder som kommer och komma så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet igen.
+Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
 
 === Bakgrund
 
@@ -67,7 +67,7 @@ Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sort
 
 #figure(
   image("images/chrome.png", width: 80%),
-  caption: [_En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt_.],
+  caption: [_En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
 )
 
 === Uppdelning av arbetet
@@ -85,13 +85,13 @@ Nedanstående figur visar ett blockschema över de komponenter som används i pr
 
 == Kravspecifikation
 
-Under projektets start bestämdes vissa krav som fanns på spelets funktionalitet. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inget nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
+Vid starten av projektet bestämdes vissa krav på spelets funktionalitet. Dessa krav delades in i Skall-krav samt utökade krav. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inget nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
 
 #linebreak()
 Skall-krav:
 + Animerad figur och en spelplan som scrollar åt höger under spelets gång. Detta skall renderas på den grafiska displayen. 
-+ Den högra tryckknappen får spelarens figur att hoppa.
-+ Den vänstra tryckknappen får spelarens figur att ducka.
++ Den högra tryckknappen skall få spelarens figur att hoppa.
++ Den vänstra tryckknappen skall få spelarens figur att ducka.
 + Poängsystem som uppdateras i realtid och skrivs ut på textdisplayen.
 + Spelmeny på textdisplayen för att starta spelet samt visa grundläggande info. 
 + Ljudeffekt när man förlorar.
@@ -117,9 +117,9 @@ Atmega16 ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokont
 
 == TWI (I2C)
 
-TWI (Two Wire Interface) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna. Där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
+TWI (Two Wire Interface) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
 
-TWI-bussen använder endast två ledare en SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data, det är själva överföringen av data och är i vilande tillstånd hög. Medan SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras i fallande flank på SCL och läses av i stigande flank.
+TWI-bussen använder endast två ledare en SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data, det är själva överföringen av data och är i vilande tillstånd hög. Medan SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
 En transaktion på TWI-bussen inleds alltid av masterenheten. Där mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Följt av en R/W-bit. Därefter kommer en ack bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, där beroende på R/W skickas data eller tas det emot data. Data skickas och tas emot med en sekvens av en byte. Där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL. Vilket frigör TWI-bussen för nya transaktioner.
 
@@ -145,16 +145,16 @@ En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning 
   caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
 )
 
-Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinueligt.
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
 
 #figure(
   image("damatrix-connector-schematic.png", width: 50%),
   caption: [_Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten._],
 )
 
-Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt advancerat kommandosystem för att möjliggöra advancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
+Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
 
-I stora drag så skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
 ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
@@ -211,7 +211,7 @@ game_update:
 
 För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
-Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y) koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en `or` instruktion för att sätta biten till 1.
+Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en or-instruktion för att sätta biten till 1.
 
 ```asm
 ; x/y i r16/r17
