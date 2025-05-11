@@ -76,7 +76,7 @@ Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på at
 
 == Blockschema
 
-Nedanstående figur visar ett blockschema över de komponenter som används i projektet, och övergripande bild på deras interna kommunikation med varandra.  I nästa avsnitt beskrivs varje komponent för sig.
+I figur 2 visas ett blockschema över de komponenter som används i projektet, och en översiktlig bild av deras interna kommunikation med varandra.  I nästa avsnitt beskrivs varje komponent för sig.
 
 #figure(
   image("images/blockschema.png", width: 90%),
@@ -85,7 +85,7 @@ Nedanstående figur visar ett blockschema över de komponenter som används i pr
 
 == Kravspecifikation
 
-Vid starten av projektet bestämdes vissa krav på spelets funktionalitet. Dessa krav delades in i Skall-krav samt utökade krav. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inget nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
+Vid starten av projektet bestämdes vissa krav på spelets funktionalitet. Dessa krav delades in i Skall-krav samt utökade krav. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inte nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
 
 #linebreak()
 Skall-krav:
@@ -103,38 +103,38 @@ Utökade krav:
 
 = Projektets delar
 
-I detta projekt har det använts en LCD-display HD4480, OLED-display ssd1309, en ATmega16 processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid kort. I denna del av rapporten kommer vi gå igenom dessa olika delar och förklara hårdvarans funktioner och hur det användes i projektet.
+I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
 
 == DAvid-kort
 
-I detta projekt har ett DAvid-kort använts. Vilket är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs och utgångs komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
 == Processor ATmega16A
 
-Atmega16 är hjärnan på DAvid-kortet och styr alla ingångs och utgångs komponenter, med antingen sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kb flashminne för lagring av programkod, 1 kb SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
+Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kb flashminne för lagring av programkod, 1 kb SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
-Atmega16 ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller. Att vara en 8-bitars mikrokontroller innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
+Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
 == TWI (I2C)
 
 TWI (Two Wire Interface) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
 
-TWI-bussen använder endast två ledare en SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data, det är själva överföringen av data och är i vilande tillstånd hög. Medan SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
+TWI-bussen använder endast två ledare SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
-En transaktion på TWI-bussen inleds alltid av masterenheten. Där mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Följt av en R/W-bit. Därefter kommer en ack bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, där beroende på R/W skickas data eller tas det emot data. Data skickas och tas emot med en sekvens av en byte. Där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL. Vilket frigör TWI-bussen för nya transaktioner.
+En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress, följt av en R/W-bit. Därefter kommer en ack-bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W biten skickas data eller tas de emot data. Data skickas och tas emot med en sekvens av en byte, där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, vilket frigör TWI-bussen för nya transaktioner.
 
 == LCD HD4480 (textdisplay)
 
-Denna display är en LCD display vilket betyder att det är en “Liquid Crystal Display”. Som i sin tur betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus/ mörka.
+Denna display är en LCD-display vilket betyder att det är en “Liquid Crystal Display”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus/ mörka.
 
 #figure(
   image("images/hd44780-schematic.png", width: 100%),
   caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
 )
 
-Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rader. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken ska skivas ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
+Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
-För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill utskrift från vänster till höger. 
+För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
 
 == SSD1309 (grafisk display)
 
