@@ -309,7 +309,7 @@ En annan förbättring hade varit att skapa mer ingående ljudeffekter. Specifik
 
 == Gruppsamarbete och tidsplan
 
-Följaktligen så kan vi fastställa att samarbetet i gruppen fungerade mycket väl. Dessutom så lyckades vi precis följa den tidsplan som vi tidigt skapade. Alla gruppmedlemmar arbetade hårt för att nå önskvärt resultat. Emellertid anser gruppen att val av projekt var en utmaning.
+ Emellertid, så kan vi fastställa att samarbetet i gruppen fungerade mycket väl. Dessutom så lyckades vi precis följa den tidsplan som vi tidigt skapade. Alla gruppmedlemmar arbetade hårt för att nå önskvärt resultat. Trots de utmaningar som vi mötte under utvecklingen.
 
 = Slutsats
 
