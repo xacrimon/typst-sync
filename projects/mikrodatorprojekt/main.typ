@@ -317,16 +317,15 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 = Referenslista
 
-- Josefsson, M. (2025). Datorteknik DAvid Hårdvarubeskrivning. [Internt material]
+- Josefsson, M. (2025). _Datorteknik DAvid Hårdvarubeskrivning._ [Internt material]
 
-- Josefsson, M. (2024 16). DAvid/Dart principschema. [Internt material]
+- Josefsson, M. (2024, 16). _DAvid/Dart principschema_. [Internt material]
 
-- Atmel Corporation. (2002). ATmega16A datasheet. [Internt material]
+- Atmel Corporation. (2002). _ATmega16A datasheet_. [Internt material]
 
-- Solomon Systech Limited. (2011). SSD1309 datasheet. [Internt material]
+- Solomon Systech Limited. (2011). _SSD1309 datasheet_. [Internt material]
 
-- Hitachi, Ltd. (1999). HD44780U datasheet. 
-[Internt material]
+- Hitachi, Ltd. (1999). _HD44780U datasheet_. [Internt material]
 
 
 #show: appendix
