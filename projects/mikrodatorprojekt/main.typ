@@ -39,21 +39,28 @@
 
 #pagebreak()
 
+//#set page(numbering: none) eller?
+
 *Figurlista*
 
-- Fig. 1: Inspirationsbild s. 4
+
+- Fig. 1: "Inspirationsbild s. 4
 
 - Fig. 2: Blockschema s. 5
 
-- Fig. 3: Schema för LCD HD44780 s. 9
+- Fig. 3: I2C-kommunikationssekvens s. 9
 
-- Fig. 4: Processor <> SPI diagram s. 10
+- Fig. 4: LCD HD44780 s. 10
 
-- Fig. 5: SPI-kommunikation vid DAMatrix-kontakten s. 10
+- Fig. 5: Schema för LCD HD44780 s. 9
 
-- Fig. 6: Schema för högtalare & IR-sändare s. 12
+- Fig. 6: Processor <> SPI diagram s. 10
 
-- Fig. 7: Bild av spelet, grafiskt renderat på skärmen s. 16
+- Fig. 7: SPI-kommunikation vid DAMatrix-kontakten s. 10
+
+- Fig. 8: Schema för högtalare & IR-sändare s. 12
+
+- Fig. 9: Bild av spelet, grafiskt renderat på skärmen s. 16
 
 
 #pagebreak()
@@ -130,7 +137,7 @@ TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör data�
 #linebreak()
 #figure(
   image("images/twi.png.png", width: 70%),
-  caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],)
+  caption: [_Figuren illustrerar en I2C-kommunikationssekvens med signalerna SDA och SCL. Den visar ett START-villkor, dataöverföring under klockpulser, ett eventuellt Repeated Start, och avslutas med ett STOP-villkor._],)
 #linebreak()
 TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
@@ -138,17 +145,21 @@ En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en
 
 == LCD HD4480 (textdisplay)
 
-Denna display är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus/ mörka.
+Denna display är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus eller mörka.
 
+#figure(  
+  image("images/hd44780.png", width: 100%),
+  caption: [_LCD HD44780_],
+)
+#linebreak()
+Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
+
+För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
 #figure(
   image("images/hd44780-schematic.png", width: 100%),
   caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
 )
-
-Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
-
-För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
-
+#pagebreak()
 == SSD1309 (grafisk display)
 
 En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Det är på denna display som spelets grafik finns.
@@ -176,7 +187,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-På DAvid kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. Medan L och R är direkt kopplade till processorns I/O pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga, samt i tryckläge låga.
+På DAvid kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. Medan L och R är direkt kopplade till processorns I/O-pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga, samt i tryckläge låga.
 
 == Högtalare
 
@@ -187,9 +198,9 @@ Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den pi
   caption: [_Kopplingsschema för högtalare & IR-sändare._],
 )
 
-Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern *SPEAKER JP*.
+Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern SPEAKER JP  .
 
-Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port *PB1* på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
+Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port PB1 på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
 
 #pagebreak()
 = Beskrivning av programvara
