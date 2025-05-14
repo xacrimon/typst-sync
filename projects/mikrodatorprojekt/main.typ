@@ -2,7 +2,7 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
 
-#set text(lang: "se")
+#set text(lang: "sv")
 
 #show: codly-init.with()
 
@@ -15,7 +15,7 @@
 }
 
 #let abstract = [
-  Gruppen har implementerat ett spel med realtidsgrafik inspirerat av Dino Run spelet som återfinns i ett easter egg i webbläsaren Google Chrome. Vi redogör för hårdvara, kopplingar, programvara och metoder som använts för att realisera vår idé på ATmega16A, DAvid-kortet och en grafisk OLED-display.
+  Gruppen har implementerat ett spel med realtidsgrafik inspirerat av Dino Run spelet som återfinns i ett _easter egg_ i webbläsaren Google Chrome. Vi redogör för hårdvara, kopplingar, programvara och metoder som använts för att realisera vår idé på ATmega16A, DAvid-kortet och en grafisk OLED-display.
 ]
 
 #show: elsearticle.with(
@@ -23,10 +23,10 @@
   authors: (
     (
       name: "J. Wejdenstål",
-      affiliation: "Linköpings Universitet",
+      affiliation: "Grupp 21",
     ),
     ( name: "K. Westberg" ),
-    ( name: "E. Allison" ),
+    ( name: "E. Allisson" ),
     ( name: "G. Gunnarson", ),
   ),
   abstract: abstract,
@@ -36,6 +36,8 @@
 #pagebreak()
 
 #outline(target: selector(heading).before(heading.where(body: [Appendix])))
+
+#pagebreak()
 
 *Figurlista*
 
@@ -53,6 +55,10 @@
 
 - Fig. 7: Bild av spelet, grafiskt renderat på skärmen s. 16
 
+
+#pagebreak()
+
+
 = Översikt
 
 Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt, TSIU51. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
@@ -63,7 +69,7 @@ Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använd
 
 === Bakgrund
 
-Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosuar Game vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
+Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosaur Game vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure(
   image("images/chrome.png", width: 80%),
@@ -72,7 +78,7 @@ Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sort
 
 === Uppdelning av arbetet
 
-Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på att intiera de två displayer som projektet använde sig av. Anledningen för detta var att gruppen trodde att detta skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga kodfunktioner till vardera display. Anledningen för detta var att hela gruppen skulle kunna arbeta med båda displayerna. Efter detta integrerade vi våra respektive koder i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.
+Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på att initiera de två displayer som projektet använde sig av. Anledningen för detta var att gruppen trodde att detta skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga funktioner till vardera display. Anledningen för detta var att hela gruppen skulle kunna arbeta med båda displayerna. Efter detta integrerade vi våra respektive koder i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.
 
 == Blockschema
 
@@ -101,6 +107,8 @@ Utökade krav:
 + Spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på 47C16.
 + Mer ingående ljudeffekter under spelet samt vid start av spelet.
 
+
+#pagebreak()
 = Projektets delar
 
 I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
@@ -111,21 +119,26 @@ I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utveckla
 
 == Processor ATmega16A
 
-Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kb flashminne för lagring av programkod, 1 kb SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
+Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
 Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
 == TWI (I2C)
 
-TWI (Two Wire Interface) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
-
-TWI-bussen använder endast två ledare SDA (data) och SCL (klockan). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
+TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
+#linebreak()
+#linebreak()
+#figure(
+  image("images/twi.png.png", width: 70%),
+  caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],)
+#linebreak()
+TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
 En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress, följt av en R/W-bit. Därefter kommer en ack-bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W biten skickas data eller tas de emot data. Data skickas och tas emot med en sekvens av en byte, där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, vilket frigör TWI-bussen för nya transaktioner.
 
 == LCD HD4480 (textdisplay)
 
-Denna display är en LCD-display vilket betyder att det är en “Liquid Crystal Display”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus/ mörka.
+Denna display är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus/ mörka.
 
 #figure(
   image("images/hd44780-schematic.png", width: 100%),
@@ -178,15 +191,16 @@ Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa voly
 
 Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port *PB1* på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
 
+#pagebreak()
 = Beskrivning av programvara
 
-== Control flow
+== Programflöde
 
-Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvänliga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initeringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
 
 #linebreak()
 Dessa steg är:
-- Inläsning samt hantering av inputs (dvs knapptryck) från hårdvara
+- Inläsning samt hantering av inputs som knapptryck från hårdvara
 - Simulering av fysik såsom gravitation och acceleration
 - Flytt av spelaren framåt längs spelbanan
 - Procedurell generation av nästkommande del av spelbanan
@@ -207,11 +221,11 @@ game_update:
 	ret
 ```
 
-== Rendering
+== _Rendering_
 
-För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en array av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller datan för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter forsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
-Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en bitmask samt en or-instruktion för att sätta biten till 1.
+Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en _bitmask_ samt en or-instruktion för att sätta biten till 1.
 
 ```asm
 ; x/y i r16/r17
@@ -303,9 +317,9 @@ Ett annat misstag som vi stötte på under projektets gång var att animera en d
 
 == Förslag till förbättringar
 
-Några förbättringar som vi under projektet kunde ha innefattar just de utökade kraven. Att skapa en lista med alla ”high-score” hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen score och kan lätt se vem som har lyckats bäst och sprungit längst.  
+Några förbättringar som vi under projektet kunde ha innefattar just de utökade kraven. Att skapa en lista med alla _high-score_ hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen _score_ och kan lätt se vem som har lyckats bäst och sprungit längst.  
 
-En annan förbättring hade varit att skapa mer ingående ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Vid mer tid hade vi kunnat skapa olika ljud för spel-loopen, hoppljud och duckljud. Vi ansåg rätt så snabbt när spelet skapades att våra skall-krav var rätt så avancerade. Effekten av detta var att när skall-kraven var implementerade så kände gruppen sig rätt så nöjda med projektet.
+En annan förbättring hade varit att skapa mer ingående ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Vid mer tid hade vi kunnat skapa olika ljud för spel-loopen, hoppande och duckande. Vi ansåg rätt så snabbt när spelet skapades att våra skall-krav var rätt så avancerade. Effekten av detta var att när skall-kraven var implementerade så kände gruppen sig rätt så nöjda med projektet.
 
 == Gruppsamarbete och tidsplan
 
@@ -321,9 +335,9 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 - Josefsson, M. (2024, 12). _DAvid/Dart principschema_. [Internt material]
 
-- Atmel Corporation. (2002). _ATmega16A datasheet_. [Internt material]
+- Atmel _Corporation_. (2002). _ATmega16A datasheet_. [Internt material]
 
-- Solomon Systech Limited. (2011). _SSD1309 datasheet_. [Internt material]
+- Solomon Systech _Limited_. (2011). _SSD1309 datasheet_. [Internt material]
 
 - Hitachi, Ltd. (1999). _HD44780U datasheet_. [Internt material]
 
