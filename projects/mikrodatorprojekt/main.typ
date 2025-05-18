@@ -8,6 +8,11 @@
 
 #codly(languages: codly-languages, zebra-fill: none)
 
+#let figure2(content, caption: []) = {
+  figure(content, caption: caption)
+  v(30pt)
+}
+
 #let appendix(body) = {
   set heading(numbering: "A", supplement: [Appendix])
   counter(heading).update(0)
@@ -78,7 +83,7 @@ Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använd
 
 Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosaur Game vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
-#figure(
+#figure2(
   image("images/chrome.png", width: 80%),
   caption: [_En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
 )
@@ -91,7 +96,7 @@ Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på at
 
 I figur 2 visas ett blockschema över de komponenter som används i projektet, och en översiktlig bild av deras interna kommunikation med varandra.  I nästa avsnitt beskrivs varje komponent för sig.
 
-#figure(
+#figure2(
   image("images/blockschema.png", width: 90%),
   caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],
 )
@@ -135,7 +140,7 @@ Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokon
 TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
 #linebreak()
 #linebreak()
-#figure(
+#figure2(
   image("images/twi.png.png", width: 70%),
   caption: [_Figuren illustrerar en I2C-kommunikationssekvens med signalerna SDA och SCL. Den visar ett START-villkor, dataöverföring under klockpulser, ett eventuellt Repeated Start, och avslutas med ett STOP-villkor._],)
 #linebreak()
@@ -147,7 +152,7 @@ En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en
 
 Denna display är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus eller mörka.
 
-#figure(  
+#figure2(  
   image("images/hd44780.png", width: 100%),
   caption: [_LCD HD44780_],
 )
@@ -155,7 +160,7 @@ Denna display är en LCD-display vilket betyder att det är en “_Liquid Crysta
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
 För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
-#figure(
+#figure2(
   image("images/hd44780-schematic.png", width: 100%),
   caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
 )
@@ -164,14 +169,14 @@ För att få en utskrift på displayen behövs det en initiering. Där får man 
 
 En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Det är på denna display som spelets grafik finns.
 
-#figure(
+#figure2(
   image("damatrix-cpu-schematic.png", width: 50%),
   caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
 )
 
 Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
 
-#figure(
+#figure2(
   image("damatrix-connector-schematic.png", width: 50%),
   caption: [_Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten._],
 )
@@ -193,7 +198,7 @@ På DAvid kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till hög
 
 Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den piezoelektriska effekten – ett fysikaliskt fenomen där vissa material deformeras och alstrar ljudvågor när en elektrisk växelspänning appliceras. Denna typ av högtalare är särskilt effektiv vid höga frekvenser och har högst verkningsgrad i området 3000–4000 Hz. Även andra hörbara frekvenser kan återges, men med minskad effektivitet.
 
-#figure(
+#figure2(
   image("images/speaker-schematic.png", width: 50%),
   caption: [_Kopplingsschema för högtalare & IR-sändare._],
 )
@@ -311,7 +316,7 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, und
 - Spelarens figur
 - Alla befintliga hinder, dessa lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
 
-#figure(
+#figure2(
   image("images/render.png", width: 60%),
   caption: [_En frame, renderad och visad på OLED skärmen._],
 )
