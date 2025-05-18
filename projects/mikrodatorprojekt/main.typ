@@ -1,4 +1,4 @@
-#import "@preview/elsearticle:0.4.2": *
+#import "elsearticle.typ": *
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
 
@@ -352,39 +352,56 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 - Hitachi, Ltd. (1999). _HD44780U datasheet_. [Internt material]
 
-
 #show: appendix
 
 #outline(target: heading.where(supplement: [Appendix]), title: [Appendix])
+
+#pagebreak()
 
 = LCD.inc
 
 #raw(read("code/LCD.inc", encoding: "utf8"), block: true, lang: "asm")
 
+#pagebreak()
+
 = error.asm
 
 #raw(read("code/error.asm", encoding: "utf8"), block: true, lang: "asm")
+
+#pagebreak()
 
 = functions.inc
 
 #raw(read("code/functions.inc", encoding: "utf8"), block: true, lang: "asm")
 
+#pagebreak()
+
 = i2c.asm
 
 #raw(read("code/i2c.asm", encoding: "utf8"), block: true, lang: "asm")
+
+#pagebreak()
 
 = m_util.inc
 
 #raw(read("code/m_util.inc", encoding: "utf8"), block: true, lang: "asm")
 
+#pagebreak()
+
 = main.asm
 
 #raw(read("code/main.asm", encoding: "utf8"), block: true, lang: "asm")
+
+#pagebreak()
 
 = psm.asm
 
 #raw(read("code/psm.asm", encoding: "utf8"), block: true, lang: "asm")
 
+#pagebreak()
+
 = ssd1309.asm
 
 #raw(read("code/ssd1309.asm", encoding: "utf8"), block: true, lang: "asm")
+
+#pagebreak()
