@@ -19,6 +19,10 @@
   body
 }
 
+#let sectionbreak() = {
+  v(25pt)
+}
+
 #let abstract = [
   Gruppen har implementerat ett spel med realtidsgrafik inspirerat av Dino Run spelet som återfinns i ett _easter egg_ i webbläsaren Google Chrome. Vi redogör för hårdvara, kopplingar, programvara och metoder som använts för att realisera vår idé på ATmega16A, DAvid-kortet och en grafisk OLED-display.
 ]
@@ -75,22 +79,28 @@
 
 Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt, TSIU51. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
 
+#sectionbreak()
+
 == Beskrivning av spel
 
 Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
 
+#pagebreak()
+
 === Bakgrund
 
-Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles Dinosaur Game vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
+Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles _Dinosaur Game_ vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure2(
   image("images/chrome.png", width: 80%),
-  caption: [_En bild på Googles Dinosaur game som var inspirationskällan till vårt projekt. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
+  caption: [_En bild på Googles Dinosaur game som var inspirationskällan till projektet. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
 )
+
+#pagebreak()
 
 === Uppdelning av arbetet
 
-Vid starten av projektet delades arbetet upp i två grupper. Fokuset låg på att initiera de två displayer som projektet använde sig av. Anledningen för detta var att gruppen trodde att detta skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga funktioner till vardera display. Anledningen för detta var att hela gruppen skulle kunna arbeta med båda displayerna. Efter detta integrerade vi våra respektive koder i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.
+Vid projektets inledning delades arbetet upp i två grupper, där fokus låg på att initiera de två displayer som projektet använde sig av. Anledningen till detta var att gruppen trodde att displayinitieringen skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga funktioner till respektive display. Syftet med detta var att säkerställa att hela gruppen skulle ha en god förståelse för och kunna arbeta med båda displayerna. Därefter integrerades den individuella koden i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.#pagebreak()
 
 == Blockschema
 
@@ -100,6 +110,15 @@ I figur 2 visas ett blockschema över de komponenter som används i projektet, o
   image("images/blockschema.png", width: 90%),
   caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],
 )
+
+=== JSP-diagram
+
+#figure2(
+  image("jsp.drawio.png", width: 100%),
+  caption: [_JSP-diagram över programmets överhängande struktur och kontrollflöde._],
+)
+
+#pagebreak()
 
 == Kravspecifikation
 
@@ -125,10 +144,12 @@ Utökade krav:
 
 I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
 
+#sectionbreak()
 == DAvid-kort
 
 I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
+#sectionbreak()
 == Processor ATmega16A
 
 Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
