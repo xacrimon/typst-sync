@@ -230,6 +230,8 @@ Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den
 
 #pagebreak()
 = Beskrivning av programvara
+I detta kapitel beskrivs programvaran som användes för att realisera spelet. Fokuset ligger på att beskriva programmets uppbyggnad, flöde och de centrala funktionerna som implementerats.
+
 
 == Programflöde
 
