@@ -204,7 +204,7 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
 
-I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion kan återfinnas i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
 ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
@@ -348,25 +348,25 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, und
 
 == Misstag under projektet
 
-Vid starten av utvecklingen så hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas.
+Vid starten av utvecklingen hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas.
 
-Vid starten av projektet kämpade även gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled displayen var defekt och vi fick en ny som vi använde under projektets gång.
+Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled-displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
-Ett annat misstag som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixels skärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade lyckats skapa en punkt som hoppade och hinder. Efter en tids arbete utan större framgång så diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick audiens för.
+Ett annat misstag som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixels skärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat en figur som hoppade och hinder. Efter en tids arbete utan större framgång så diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick godkännande för.
 
 == Förslag till förbättringar
 
-Några förbättringar som vi under projektet kunde ha innefattar just de utökade kraven. Att skapa en lista med alla _high-score_ hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen _score_ och kan lätt se vem som har lyckats bäst och sprungit längst.  
+Några förbättringar till projektet kunde innefattat just de utökade kraven. Att skapa en lista med alla _high-score_ hade gjort det möjligt för spelaren att tävla mot sig själv samt andra på ett mer sofistikerat sätt. Då hade till exempel spelaren själv inte behövt komma ihåg sin egen _score_ och kan lätt se vem som har lyckats bäst och sprungit längst.  
 
-En annan förbättring hade varit att skapa mer ingående ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Vid mer tid hade vi kunnat skapa olika ljud för spel-loopen, hoppande och duckande. Vi ansåg rätt så snabbt när spelet skapades att våra skall-krav var rätt så avancerade. Effekten av detta var att när skall-kraven var implementerade så kände gruppen sig rätt så nöjda med projektet.
+En annan förbättring hade varit att skapa mer avancerade ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Med mer tid hade vi kunnat implementera olika ljudeffekter för spel-loopen, hopp och duckning. Vi insåg tidigt att våra skall-krav var relativt avancerade. När dessa hade implementerats kände gruppen sig nöjd med projektets resultat.
 
 == Gruppsamarbete och tidsplan
 
- Emellertid, så kan vi fastställa att samarbetet i gruppen fungerade mycket väl. Dessutom så lyckades vi precis följa den tidsplan som vi tidigt skapade. Alla gruppmedlemmar arbetade hårt för att nå önskvärt resultat. Trots de utmaningar som vi mötte under utvecklingen.
+ Emellertid vill vi poängtera att samarbetet inom gruppen fungerade mycket väl. Vi lyckades dessutom följa den tidsplan som vi tidigt skapade. Samtliga gruppmedlemmar arbetade hårt för att uppnå önskat resultat, trots de utmaningar som uppstod under utvecklingen.
 
 = Slutsats
 
-Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Spelet som vi har konstruerat har varit över förväntan. Även fast vi inte hann implementera de utökade kraven så känner vi att slutprodukten är väldigt lik det vi hade tänkt att projektet skulle spegla när vi började att planera i starten av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi konstaterade att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
+Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Spelet som vi har konstruerat har varit bättre än förväntat. Även fast vi inte hann implementera de utökade kraven känner vi att slutprodukten är i linje med vår ursprungliga vision av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi känner att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
 
 = Referenslista
 
