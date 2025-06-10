@@ -167,11 +167,11 @@ TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör data�
 #linebreak()
 TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
-En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress, följt av en R/W-bit. Därefter kommer en ack-bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W biten skickas data eller tas de emot data. Data skickas och tas emot med en sekvens av en byte, där varje byte följs av en ack bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, vilket frigör TWI-bussen för nya transaktioner.
+En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress, följt av en R/W-bit. Därefter kommer en ack-bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W biten skickas data eller tas de emot data. Data skickas och tas emot med en sekvens av en byte, där varje byte följs av en ack-bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, vilket frigör TWI-bussen för nya transaktioner.
 
 == LCD HD4480 (textdisplay)
 
-Denna display är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus eller mörka.
+Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus eller mörka.
 
 #figure2(  
   image("images/hd44780.png", width: 100%),
@@ -204,7 +204,7 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
 
-I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Direkt efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
 ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
@@ -213,7 +213,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-På DAvid kortet finns 6 tryckknappar. 3 till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. Medan L och R är direkt kopplade till processorns I/O-pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga, samt i tryckläge låga.
+På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. L och R är direkt kopplade till processorns I/O-pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
 
 == Högtalare
 
@@ -235,7 +235,7 @@ I detta kapitel beskrivs programvaran som användes för att realisera spelet. F
 
 == Programflöde
 
-Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, så omfamnas all logik i kodbasen av en *Game Loop* som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara,  omfamnas all logik i kodbasen av en Game Loop som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
 
 #linebreak()
 Dessa steg är:
@@ -245,7 +245,7 @@ Dessa steg är:
 - Procedurell generation av nästkommande del av spelbanan
 - Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
-- Testa om spelaren kolliderar med ett hinder och har förlorat
+- Testa om spelaren kolliderar med ett hinder 
 
 ```asm
 game_update:
@@ -262,7 +262,7 @@ game_update:
 
 == _Rendering_
 
-För att förenkla överföring av VRAM till SSD1309ans GDDRAM så efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeterar 128 gånger då högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+För att förenkla överföring av VRAM till SSD1309s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeteras 128 gånger då högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
 Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en _bitmask_ samt en or-instruktion för att sätta biten till 1.
 
