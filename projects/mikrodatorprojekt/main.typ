@@ -83,7 +83,7 @@ Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har
 
 == Beskrivning av spel
 
-Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
+Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, en LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
 
 #pagebreak()
 
@@ -122,21 +122,21 @@ I figur 2 visas ett blockschema över de komponenter som används i projektet, o
 
 == Kravspecifikation
 
-Vid starten av projektet bestämdes vissa krav på spelets funktionalitet. Dessa krav delades in i Skall-krav samt utökade krav. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men inte nödvändigt för projektet. Alla skall-krav implementerades, däremot implementerades inte de utökade kraven. Dessa krav redovisas i kravspecifikationen som följer nedan.
+Vid starten av projektet bestämdes vissa krav på spelets funktionalitet. Dessa krav delades in i Skall-krav samt utökade krav. Skall-kraven var funktioner som var nödvändiga att implementera i spelet. De utökade kraven kunde implementeras vid mån av tid men var inte nödvändigt för projektet. Dessa krav redovisas i kravspecifikationen som följer nedan.
 
 #linebreak()
 Skall-krav:
 + Animerad figur och en spelplan som scrollar åt höger under spelets gång. Detta skall renderas på den grafiska displayen. 
 + Den högra tryckknappen skall få spelarens figur att hoppa.
 + Den vänstra tryckknappen skall få spelarens figur att ducka.
-+ Poängsystem som uppdateras i realtid och skrivs ut på textdisplayen.
-+ Spelmeny på textdisplayen för att starta spelet samt visa grundläggande info. 
-+ Ljudeffekt när man förlorar.
++ Poängsystem som skall uppdateras i realtid och skriva ut på textdisplayen.
++ Spelmeny som skall visas på textdisplayen för att starta spelet samt visa grundläggande info. 
++ Ljudeffekt skall höras när man förlorar.
 
 #linebreak()
 Utökade krav:
-+ Spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på 47C16.
-+ Mer ingående ljudeffekter under spelet samt vid start av spelet.
++ Skall spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på TWI-minnet 47C16. 
++ Skall ha mer ingående ljudeffekter under spelet samt vid start av spelet.
 
 
 #pagebreak()
@@ -147,27 +147,27 @@ I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309,
 #sectionbreak()
 == DAvid-kort
 
-I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16A. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
 #sectionbreak()
 == Processor ATmega16A
 
-Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (IC2). Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
+Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (I2C). Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
 Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
 == TWI (I2C)
 
-TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en master (en mikrokontroller) och en eller flera slavenheter (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna, där mastern först adresserar slavenheten och därefter begär antingen en skrivning eller läsning från slavenheten.
+TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en _master_ (en mikrokontroller) och en eller flera _slavenheter_ (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna. Mastern  adresserar först slavenheten och begär därefter antingen en skrivning eller läsning från slavenheten.
 #linebreak()
 #linebreak()
 #figure2(
   image("images/twi.png.png", width: 70%),
   caption: [_Figuren illustrerar en I2C-kommunikationssekvens med signalerna SDA och SCL. Den visar ett START-villkor, dataöverföring under klockpulser, ett eventuellt Repeated Start, och avslutas med ett STOP-villkor._],)
 #linebreak()
-TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. De är själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
+TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. Själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
-En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal vilket innebär att SDA går lågt medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress, följt av en R/W-bit. Därefter kommer en ack-bit som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W biten skickas data eller tas de emot data. Data skickas och tas emot med en sekvens av en byte, där varje byte följs av en ack-bit. När hela transaktionen sedan är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, vilket frigör TWI-bussen för nya transaktioner.
+En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal, vilket innebär att SDA går låg medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Detta följs av en R/W-bit. Därefter kommer en _ack-bit_ som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W-biten skickas data eller tas emot. Data skickas och tas emot med en sekvens av en byte, varje byte följs av en ack-bit. När hela transaktionen är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, detta frigör TWI-bussen för nya transaktioner.
 
 == LCD HD4480 (textdisplay)
 
@@ -188,21 +188,21 @@ För att få en utskrift på displayen behövs det en initiering. Där får man 
 #pagebreak()
 == SSD1309 (grafisk display)
 
-En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64. Det är på denna display som spelets grafik finns.
+En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64 pixlar. Det är på denna display som spelets grafik utspelar sig.
 
 #figure2(
   image("damatrix-cpu-schematic.png", width: 50%),
   caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
 )
 
-Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix så styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
 
 #figure2(
   image("damatrix-connector-schematic.png", width: 50%),
   caption: [_Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten._],
 )
 
-Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi ej hade.
+Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi inte hade.
 
 I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
@@ -235,7 +235,7 @@ I detta kapitel beskrivs programvaran som användes för att realisera spelet. F
 
 == Programflöde
 
-Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara,  omfamnas all logik i kodbasen av en Game Loop som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, omfamnas all logik i kodbasen av en Game Loop som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
 
 #linebreak()
 Dessa steg är:
@@ -245,9 +245,9 @@ Dessa steg är:
 - Procedurell generation av nästkommande del av spelbanan
 - Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
-- Testa om spelaren kolliderar med ett hinder 
+- Testa om spelaren kolliderar med ett hinder  
 
-```asm
+```
 game_update:
 	call update_player
 	call update_player_input
@@ -264,7 +264,7 @@ game_update:
 
 För att förenkla överföring av VRAM till SSD1309s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeteras 128 gånger då högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
-Proceduren för att rendera ett objekt, exempelvis spelaren, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen så används en _bitmask_ samt en or-instruktion för att sätta biten till 1.
+Proceduren för att rendera ett objekt, exempelvis spelaren eller hinder, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen används en _bitmask_ samt en or-instruktion för att sätta biten till ett.
 
 ```asm
 ; x/y i r16/r17
@@ -333,15 +333,15 @@ in1:
 ```
 
 #linebreak()
-Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, under normala omständigheter är dessa följande:
+Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, vid normala omständigheter är dessa följande:
 - Himmel, ovan spelaren
 - Mark, under spelaren
 - Spelarens figur
-- Alla befintliga hinder, dessa lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
+- Alla befintliga hinder, som lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
 
 #figure2(
   image("images/render.png", width: 60%),
-  caption: [_En frame, renderad och visad på OLED skärmen._],
+  caption: [_En frame, renderad och visad på OLED-skärmen._],
 )
 
 = Diskussion
@@ -352,7 +352,7 @@ Vid starten av utvecklingen hade vi stora problem med initieringen av de båda s
 
 Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled-displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
-Ett annat misstag som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixels skärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat en figur som hoppade och hinder. Efter en tids arbete utan större framgång så diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick godkännande för.
+Ett annat problem som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixelskärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat våra hinder samt en punkt som representerade spelaren. Efter en tids arbete utan större framgång diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick godkännande för.
 
 == Förslag till förbättringar
 
