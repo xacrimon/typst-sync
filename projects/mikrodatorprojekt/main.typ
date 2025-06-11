@@ -171,11 +171,11 @@ En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en
 
 == LCD HD4480 (textdisplay)
 
-Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljus eller mörka.
+Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
 
 #figure2(  
   image("images/hd44780.png", width: 100%),
-  caption: [_LCD HD44780_],
+  caption: [_LCD HD44780 som användes för att visa menyn till spelet samt poängräkningen under spelets gång._],
 )
 #linebreak()
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
@@ -224,7 +224,7 @@ Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den pi
   caption: [_Kopplingsschema för högtalare & IR-sändare._],
 )
 
-Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern SPEAKER JP  .
+Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern SPEAKER_JP  .
 
 Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port PB1 på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
 
@@ -247,6 +247,7 @@ Dessa steg är:
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
 - Testa om spelaren kolliderar med ett hinder  
 
+Detta avsnitt med kod är hur vår Game loop ser ut:
 ```
 game_update:
 	call update_player
@@ -259,6 +260,7 @@ game_update:
 	call test_death
 	ret
 ```
+ 
 
 == _Rendering_
 
