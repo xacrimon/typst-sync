@@ -219,7 +219,7 @@ Innan något kan visas måste drivkretsen först startas och konfigureras. Drivk
 
 I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
-```asm
+  ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
 .equ INIT_PARAMS_LEN = 18
 ```
@@ -263,7 +263,7 @@ Dessa steg är:
 - Testa om spelaren kolliderar med ett hinder  
 
 Detta avsnitt med kod är hur vår Game loop ser ut:
-```
+```asm
 game_update:
 	call update_player
 	call update_player_input
@@ -399,6 +399,7 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 #show: appendix
 
+#set text(font: "New Computer Modern Mono")
 #outline(target: heading.where(supplement: [Appendix]), title: [Appendix])
 
 #pagebreak()
