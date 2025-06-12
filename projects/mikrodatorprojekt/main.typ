@@ -399,7 +399,7 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 #show: appendix
 
-#set text(font: "New Computer Modern Mono")
+#show outline.entry: set text(font: "New Computer Modern Mono")
 #outline(target: heading.where(supplement: [Appendix]), title: [Appendix])
 
 #pagebreak()
