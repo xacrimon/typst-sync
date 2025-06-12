@@ -22,7 +22,6 @@
 #let sectionbreak() = {
   v(25pt)
 }
-
 #let abstract = [
   Gruppen har implementerat ett spel med realtidsgrafik inspirerat av Dino Run spelet som återfinns i ett _easter egg_ i webbläsaren Google Chrome. Vi redogör för hårdvara, kopplingar, programvara och metoder som använts för att realisera vår idé på ATmega16A, DAvid-kortet och en grafisk OLED-display.
 ]
@@ -41,6 +40,11 @@
   abstract: abstract,
   format: "review",
 )
+
+#set page(margin: (
+  top: 100pt,
+  bottom: 100pt
+))
 
 #pagebreak()
 
@@ -75,25 +79,23 @@
 
 #pagebreak()
 
+#set par(leading: 1em)
 
 = Översikt
 
 Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har implementerats inom ramen för kursen Mikrodatorprojekt, TSIU51. Rapporten innehåller en beskrivning av spelets funktion och syfte, en genomgång av de komponenter som har använts samt en övergripande presentation av den programlogik som ligger till grund för spelets funktionalitet.
 
-#sectionbreak()
-
 == Beskrivning av spel
 
 Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, en LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
 
-#pagebreak()
 
 === Bakgrund
 
 Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles _Dinosaur Game_ vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure2(
-  image("images/chrome.png", width: 80%),
+  image("images/chrome.png", height: 21%, width: 80%),
   caption: [_En bild på Googles Dinosaur game som var inspirationskällan till projektet. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
 )
 
@@ -101,7 +103,7 @@ Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sort
 
 === Uppdelning av arbetet
 
-Vid projektets inledning delades arbetet upp i två grupper, där fokus låg på att initiera de två displayer som projektet använde sig av. Anledningen till detta var att gruppen trodde att displayinitieringen skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga funktioner till respektive display. Syftet med detta var att säkerställa att hela gruppen skulle ha en god förståelse för och kunna arbeta med båda displayerna. Därefter integrerades den individuella koden i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.#pagebreak()
+Vid projektets inledning delades arbetet upp i två grupper, där fokus låg på att initiera de två displayer som projektet använde sig av. Anledningen till detta var att gruppen trodde att displayinitieringen skulle vara en stor del av arbetet. När sedan displayerna var korrekt initierade arbetade båda grupperna med lättförståeliga funktioner till respektive display. Syftet med detta var att säkerställa att hela gruppen skulle ha en god förståelse för och kunna arbeta med båda displayerna. Därefter integrerades den individuella koden i en gemensam fil, vilket gjorde att den delade filen blev sammanhängande och använde samma TWI-kod. Slutligen arbetade hela gruppen med resterande delar i spelet, dess funktioner och logik.
 
 == Blockschema
 
@@ -111,6 +113,8 @@ I figur 2 visas ett blockschema över de komponenter som används i projektet, o
   image("images/blockschema.png", width: 90%),
   caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],
 )
+
+#pagebreak()
 
 === JSP-diagram
 
@@ -139,27 +143,27 @@ Utökade krav:
 + Skall spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på TWI-minnet 47C16. 
 + Skall ha mer ingående ljudeffekter under spelet samt vid start av spelet.
 
-
 #pagebreak()
+
 = Projektets delar
 
 I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
 
-#sectionbreak()
 == DAvid-kort
 
 I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16A. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
 
-#sectionbreak()
 == Processor ATmega16A
 
-Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI (I2C). Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
+Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI. Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
 Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
-== TWI (I2C)
+#pagebreak()
 
-TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en _master_ (en mikrokontroller) och en eller flera _slavenheter_ (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna. Mastern  adresserar först slavenheten och begär därefter antingen en skrivning eller läsning från slavenheten.
+== TWI
+
+TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör #linebreak() dataöverföring mellan en _master_ (en mikrokontroller) och en eller flera _slavenheter_ (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna. Mastern  adresserar först slavenheten och begär därefter antingen en skrivning eller läsning från slavenheten.
 #linebreak()
 #linebreak()
 #figure2(
@@ -170,6 +174,8 @@ TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA använd
 
 En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal, vilket innebär att SDA går låg medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Detta följs av en R/W-bit. Därefter kommer en _ack-bit_ som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W-biten skickas data eller tas emot. Data skickas och tas emot med en sekvens av en byte, varje byte följs av en ack-bit. När hela transaktionen är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, detta frigör TWI-bussen för nya transaktioner.
 
+#pagebreak()
+
 == LCD HD4480 (textdisplay)
 
 Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
@@ -178,15 +184,19 @@ Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket 
   image("images/hd44780.png", width: 100%),
   caption: [_LCD HD44780 som användes för att visa menyn till spelet samt poängräkningen under spelets gång._],
 )
-#linebreak()
+
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
+
+#pagebreak()
 
 För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
 #figure2(
   image("images/hd44780-schematic.png", width: 100%),
   caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
 )
+
 #pagebreak()
+
 == SSD1309 (grafisk display)
 
 En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64 pixlar. Det är på denna display som spelets grafik utspelar sig.
@@ -203,6 +213,8 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
   caption: [_Pindiagram för hur SPI-kommunikation sköts över pinnarna på DAMatrix-kontakten._],
 )
 
+#pagebreak()
+
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi inte hade.
 
 I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
@@ -215,6 +227,8 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 == Tryckknappar L/R
 
 På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. L och R är direkt kopplade till processorns I/O-pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
+
+#pagebreak()
 
 == Högtalare
 
