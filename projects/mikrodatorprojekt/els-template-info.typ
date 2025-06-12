@@ -59,7 +59,7 @@
   // Format the abstract
   let els-abstract = if abstract != none {
     line(length: 100%)
-    text(weight: "bold", [Abstract])
+    text(weight: "bold", [Abstrakt])
     v(1pt)
     h(-indent-size); abstract
     linebreak()
