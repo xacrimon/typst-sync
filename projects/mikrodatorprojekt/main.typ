@@ -44,6 +44,7 @@
 
 #pagebreak()
 
+#show outline.entry: set block(spacing: 1.45em)
 #outline(target: selector(heading).before(heading.where(body: [Appendix])))
 
 #pagebreak()
