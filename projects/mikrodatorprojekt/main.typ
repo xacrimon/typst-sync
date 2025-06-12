@@ -404,6 +404,8 @@ Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi ly
 
 #pagebreak()
 
+#set text(font: "New Computer Modern Mono")
+
 = LCD.inc
 
 #raw(read("code/LCD.inc", encoding: "utf8"), block: true, lang: "asm")
