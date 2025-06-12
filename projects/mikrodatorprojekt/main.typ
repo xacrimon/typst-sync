@@ -226,7 +226,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via en I/O-expander IC5. L och R är direkt kopplade till processorns I/O-pinnar och nås via PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
+På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via I/O-expander IC5 vilket är en modul som ger tillgång till ytterligare GPIO-pinnar via TWI-protokollet. L och R är direkt kopplade till processorns I/O-pinnar PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
 
 #pagebreak()
 
@@ -258,7 +258,7 @@ Dessa steg är:
 - Simulering av fysik såsom gravitation och acceleration
 - Flytt av spelaren framåt längs spelbanan
 - Procedurell generation av nästkommande del av spelbanan
-- Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM
+- Loopa över alla saker som skulle kunna vara inom spelarens syn, och beräkna vilka pixlar på skärmen som skall tändas i VRAM _(Video RAM, minne som innehåller pixeldata)_
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
 - Testa om spelaren kolliderar med ett hinder  
 
