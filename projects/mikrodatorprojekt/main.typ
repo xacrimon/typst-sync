@@ -118,6 +118,7 @@ I figur 2 visas ett blockschema över de komponenter som används i projektet, o
 
 === JSP-diagram
 
+I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diagrammet är uppdelat i tre huvudsakliga delar. initiering, Game loop samt Endscreen. Dessa tillstånd representerar programmets flöde, från start till avslut.
 #figure2(
   image("jsp.drawio.png", width: 100%),
   caption: [_JSP-diagram över programmets överhängande struktur och kontrollflöde._],
@@ -226,7 +227,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via I/O-expander IC5 vilket är en modul som ger tillgång till ytterligare GPIO-pinnar via TWI-protokollet. L och R är direkt kopplade till processorns I/O-pinnar PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
+§
 
 #pagebreak()
 
