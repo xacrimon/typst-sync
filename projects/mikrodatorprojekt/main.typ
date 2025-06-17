@@ -227,7 +227,7 @@ INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80
 
 == Tryckknappar L/R
 
-§
+På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till höger (R1, R, R2). Knapparna L1, L2, R1 och R2 nås via I/O-expander IC5 vilket är en modul som ger tillgång till ytterligare GPIO-pinnar via TWI-protokollet. L och R är direkt kopplade till processorns I/O-pinnar PD1 och PD0. Knapparna är avstudsade och är i vilande läge höga och i tryckläge låga.
 
 #pagebreak()
 
@@ -280,7 +280,7 @@ game_update:
 
 == _Rendering_
 
-För att förenkla överföring av VRAM till SSD1309s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger; detta repeteras 128 gånger då högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+För att förenkla överföring av VRAM till SSD1309s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger, detta repeteras 128 gånger tills högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
 
 Proceduren för att rendera ett objekt, exempelvis spelaren eller hinder, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen används en _bitmask_ samt en or-instruktion för att sätta biten till ett.
 
