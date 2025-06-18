@@ -230,7 +230,7 @@ I stora drag skickas 18 olika kommandon, √•tta bitar vardera till drivkretsen f√
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
 .equ INIT_PARAMS_LEN = 18
 ```],
-  caption: [_Initieringsparametrar till SSD1309_],
+  caption: [_Figuren visar initieringsparametrar som skickas som instruktioner till SSD1309._],
 )
 
 == Tryckknappar L/R
