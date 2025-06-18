@@ -107,7 +107,7 @@
       }
       h(1fr)
       //emph(datetime.today().display("[day] [month repr:long], [year]"))
-      emph("version 3")
+      emph("Version 3")
       linebreak()
       h(1fr)
       emph("2025-06-18")
