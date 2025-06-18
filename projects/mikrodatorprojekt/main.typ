@@ -111,17 +111,7 @@ I figur 2 visas ett blockschema över de komponenter som används i projektet, o
 
 #figure2(
   image("images/blockschema.png", width: 90%),
-  caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD HD44780, SSD1309, och högtalaren._],
-)
-
-#pagebreak()
-
-=== JSP-diagram
-
-I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diagrammet är uppdelat i tre huvudsakliga delar. initiering, Game loop samt Endscreen. Dessa tillstånd representerar programmets flöde, från start till avslut.
-#figure2(
-  image("jsp.drawio.png", width: 100%),
-  caption: [_JSP-diagram över programmets överhängande struktur och kontrollflöde._],
+  caption: [_Blockschema som visar de olika komponenterna som används i projektet, och hur den interna kommunikationen sker mellan dem. Processorn läser in data från tryckknapparna, behandlar dem och skickar sedan ut till LCD-HD44780, OLED-SSD1309, och högtalaren._],
 )
 
 #pagebreak()
@@ -143,6 +133,16 @@ Skall-krav:
 Utökade krav:
 + Skall spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på TWI-minnet 47C16. 
 + Skall ha mer ingående ljudeffekter under spelet, samt vid start av spelet.
+
+#pagebreak()
+
+=== JSP-diagram
+
+I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diagrammet är uppdelat i tre huvudsakliga delar. initiering, Game loop samt Endscreen. Dessa tillstånd representerar programmets flöde, från start till avslut.
+#figure2(
+  image("jsp.drawio.png", width: 100%),
+  caption: [_JSP-diagram över programmets överhängande struktur och kontrollflöde._],
+)
 
 #pagebreak()
 
@@ -198,7 +198,7 @@ För att få en utskrift på displayen behövs det en initiering. Där får man 
 
 #pagebreak()
 
-== SSD1309 (grafisk display)
+== SSD1309 (grafisk display) 
 
 En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64 pixlar. Det är på denna display som spelets grafik utspelar sig.
 
@@ -218,7 +218,7 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi inte hade.
 
-I stora drag skickas 18 olika kommandon, 8 bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag skickas 18 olika kommandon, åtta bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
   ```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
@@ -366,7 +366,7 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, vid
 
 == Misstag under projektet
 
-Vid starten av utvecklingen hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas.
+Vid starten av utvecklingen hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas. Detta var genom exempelkod och ny hårdvara.
 
 Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled-displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
