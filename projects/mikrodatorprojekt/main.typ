@@ -169,7 +169,7 @@ I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATm
 
 Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI. Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
-Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
+Atmega16A ingår i AVR-familjen vilket innebär att det är en åtta-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data åtta bitar (en byte) åt gången.
 
 == TWI
 
@@ -199,7 +199,7 @@ Skärmen som visas i figur 5 är av modell LCD HD44780 där LCD syftar på att d
 
 Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett _DDRAM_ (_Display Data RAM_) och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och _CGROM_ (_Character Generator ROM_) är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
-För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
+För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda fyra eller åtta bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
 
 #pagebreak()
  
@@ -293,7 +293,7 @@ game_update:
 
 #set par(leading: 0.9em)
 
-För att förenkla överföring av VRAM till SSD1309:s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger, detta repeteras 128 gånger tills högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen. Avbrottsdrivna bakgrundsrutiner överför innehållet i VRAM kontinuerligt till skärmen och det visas upp enligt figur 12.
+För att förenkla överföring av VRAM till SSD1309:s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av åtta pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger, detta repeteras 128 gånger tills högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna åtta pixlar nedåt, nästa rad på skärmen. Avbrottsdrivna bakgrundsrutiner överför innehållet i VRAM kontinuerligt till skärmen och det visas upp enligt figur 12.
 
 #figure2(
   image("images/render.png", width: 60%),
@@ -396,7 +396,7 @@ Vid starten av utvecklingen hade vi stora problem med initieringen av de båda s
 
 Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var våran display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att OLED-displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
-Ett annat problem som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixelskärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat våra hinder samt en punkt som representerade spelaren. Efter en tids arbete utan större framgång diskuterade gruppen med examinatorn om det var möjligt att teckna spelaren som en kub i stället för en dinosaurie vilket vi fick godkännande för.
+Ett annat problem som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixelskärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat våra hinder samt en punkt som representerade spelaren. Efter en tids arbete utan större framgång diskuterade gruppen med examinatorn om det var möjligt att teckna spelaren som en kvadrat i stället för en dinosaurie vilket vi fick godkännande för.
 
 == Förslag till förbättringar
 
