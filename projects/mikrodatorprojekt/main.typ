@@ -142,7 +142,7 @@ Skall-krav:
 #linebreak()
 Utökade krav:
 + Skall spara tidigare omgångar och ha möjlighet att visa upp dem efteråt, lämpligen på TWI-minnet 47C16. 
-+ Skall ha mer ingående ljudeffekter under spelet samt vid start av spelet.
++ Skall ha mer ingående ljudeffekter under spelet, samt vid start av spelet.
 
 #pagebreak()
 
