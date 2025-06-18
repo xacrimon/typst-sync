@@ -188,9 +188,9 @@ En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en
 
 #pagebreak()
 
-== LCD HD4480 (textdisplay)
+== LCD HD44780 (textdisplay)
 
-Skärmen som visas i figur 5 är av modell LCD HD4480 där LCD syftar på att det är en “_Liquid Crystal Display_”. Dessa fungerar genom att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
+Skärmen som visas i figur 5 är av modell LCD HD44780 där LCD syftar på att det är en “_Liquid Crystal Display_”. Dessa fungerar genom att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
 
 #figure2(
   image("images/hd44780.png", width: 100%),
