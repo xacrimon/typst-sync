@@ -167,7 +167,7 @@ I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATm
 
 == Processor ATmega16A
 
-Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI. Den är utrustad med ett 16 kB flashminne för lagring av programkod, 1 kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
+Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-komponenter, via sina I/O-pinnar eller TWI. Den är utrustad med ett 16 kB flashminne för lagring av programkod, en kB SRAM för variabelhantering under körning samt 512 byte EEPROM för permanent lagring på processorn.
 
 Atmega16A ingår i AVR-familjen vilket innebär att det är en åtta-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data åtta bitar (en byte) åt gången.
 
@@ -212,7 +212,7 @@ En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning 
   caption: [_SSD1309 är den primära skärmen där spelet utspelar sig. Bilden visar himmelen och marken som finns i spelet. _],
 )
 
-Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix styrs den från processorn med 4-pin SPI. Figur 8 representerar hur SPI-kommunikationen utförs. Drivkretsen har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix styrs den från processorn med 4-pin SPI. Figur 8 representerar hur SPI-kommunikationen utförs. Drivkretsen har ett internt GDDRAM av storlek en KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
 
 #figure2(
   image("damatrix-connector-schematic.png", width: 50%),
