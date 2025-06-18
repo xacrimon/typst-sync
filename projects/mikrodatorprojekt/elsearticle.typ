@@ -106,7 +106,11 @@
         emph(("Preprint submitted to ", journal).join())
       }
       h(1fr)
-      emph(datetime.today().display("[day] [month repr:long], [year]"))
+      //emph(datetime.today().display("[day] [month repr:long], [year]"))
+      emph("version 3")
+      linebreak()
+      h(1fr)
+      emph("2025-06-18")
     } else {align(center)[#i]}
   }
 

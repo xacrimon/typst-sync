@@ -4,7 +4,7 @@
 
 #set text(lang: "sv")
 
-#show: codly-init.with()
+#show: codly-init.with()  
 
 #codly(languages: codly-languages, zebra-fill: none)
 
@@ -53,29 +53,22 @@
 
 #pagebreak()
 
-//#set page(numbering: none) eller?
+*Figur och list-förteckning*
 
-*Figurlista*
-
-
-- Fig. 1: "Inspirationsbild s. 4
-
-- Fig. 2: Blockschema s. 5
-
-- Fig. 3: I2C-kommunikationssekvens s. 9
-
-- Fig. 4: LCD HD44780 s. 10
-
-- Fig. 5: Schema för LCD HD44780 s. 9
-
-- Fig. 6: Processor <> SPI diagram s. 10
-
-- Fig. 7: SPI-kommunikation vid DAMatrix-kontakten s. 10
-
-- Fig. 8: Schema för högtalare & IR-sändare s. 12
-
-- Fig. 9: Bild av spelet, grafiskt renderat på skärmen s. 16
-
+#align(center, table(
+  columns: (75pt, auto, auto),
+  align: left,
+  stroke: none,
+  [Figur 1], [Inspirationsbild], [4],
+  [Figur 2], [Blockschema], [5],
+  [Figur 3], [I2C-kommunikationssekvens], [9],
+  [Figur 4], [LCD HD44780], [10],
+  [Figur 5], [Schema för LCD HD44780], [9],
+  [Figur 6], [Processor <> SPI diagram], [10],
+  [Figur 7], [SPI-kommunikation vid DAMatrix-kontakten], [10],
+  [Figur 8], [Schema för högtalare & IR-sändare], [12],
+  [Figur 9], [Bild av spelet, grafiskt renderat på skärmen], [16],
+))
 
 #pagebreak()
 
@@ -87,15 +80,14 @@ Syftet med denna rapport är att redogöra för utvecklingen av ett spel som har
 
 == Beskrivning av spel
 
-Denna rapport beskriver hur ett sidskrollande spel konstruerades. Spelet använder sig av en OLED-display (ssd1309) som spelplan, en LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
+Denna rapport beskriver hur ett sidskrollande spel konstruerats. Spelet använder sig av en OLED-display (ssd1309) som spelplan, en LCD-display för att skriva ut spelmeny samt två tryckknappar för att hoppa och ducka. Spelet går ut på att försöka undvika de hinder som kommer och överleva så långt som möjligt. Vid en kollision med hinder kommer ett ljud ut från högtalarna och spelaren får sitt resultat utskrivet och möjligheten att börja om spelet från början.
 
-
-=== Bakgrund
+== Bakgrund
 
 Vid uppstarten av projektet hölls ett möte med mål att fundera ut vilken sorts spel vi skulle försöka skapa. Många olika förslag framfördes men det slutade med att gruppen enades om att skapa ett sidskrollande spel som skulle likna Googles _Dinosaur Game_ vilket visas i figur 1. Gruppens tanke var att försöka göra en kopia av spelet med given hårdvara. Svårighetsgrad och implementeringen var inget som gruppen tänkte särskilt mycket på utan idén var det viktiga för oss. Efter detta började vi diskutera val av hårdvara samt skall-krav med examinator och handledare.
 
 #figure2(
-  image("images/chrome.png", height: 21%, width: 80%),
+  image("images/chrome.png", height: 20%, width: 80%),
   caption: [_En bild på Googles Dinosaur game som var inspirationskällan till projektet. Dinosaurien springer längs planen och målet är att undvika kaktusar genom att hoppa eller ducka. _ ],
 )
 
