@@ -4,12 +4,12 @@
 
 #set text(lang: "sv")
 
-#show: codly-init.with()  
+#show: codly-init
 
-#codly(languages: codly-languages, zebra-fill: none)
+#codly(languages: codly-languages, zebra-fill: none, display-icon: false)
 
 #let figure2(content, caption: []) = {
-  figure(content, caption: caption)
+  figure(content, caption: caption, kind: image)
   v(30pt)
 }
 
@@ -53,6 +53,7 @@
 
 #pagebreak()
 
+#h(35pt)
 *Figur och list-förteckning*
 
 #align(center, table(
@@ -61,16 +62,22 @@
   stroke: none,
   [Figur 1], [Inspirationsbild], [4],
   [Figur 2], [Blockschema], [5],
-  [Figur 3], [I2C-kommunikationssekvens], [9],
-  [Figur 4], [LCD HD44780], [10],
-  [Figur 5], [Schema för LCD HD44780], [9],
-  [Figur 6], [Processor <> SPI diagram], [10],
-  [Figur 7], [SPI-kommunikation vid DAMatrix-kontakten], [10],
-  [Figur 8], [Schema för högtalare & IR-sändare], [12],
-  [Figur 9], [Bild av spelet, grafiskt renderat på skärmen], [16],
+  [Figur 3], [JSP-diagram], [7],
+  [Figur 4], [DAvid-kort], [8],
+  [Figur 5], [TWI-kommunikationssekvens], [9],
+  [Figur 6], [LCD HD44780], [11],
+  [Figur 7], [OLED-skärmen SSD1309], [12],
+  [Figur 8], [Pindiagram för SPI-kommunikation], [12],
+  [Figur 9], [Initieringsparametrar till SSD1309], [13],
+  [Figur 10], [Kopplingschema för högtalare och IR-sändare], [14],
+  [Figur 11], [Uppdateringsfunktion för spelsimulering], [15],
+  [Figur 12], [Bild av spelet, grafiskt renderat på skärmen], [16],
+  [Figur 13], [Funktion för att tända pixlar i VRAM], [17],
+  [Figur 14], [Funktion för att rita ut spelaren], [18],
+  
 ))
 
-#pagebreak()
+#pagebreak()  
 
 #set par(leading: 1em)
 
@@ -128,9 +135,12 @@ Utökade krav:
 
 #pagebreak()
 
-=== JSP-diagram
+== JSP-diagram
 
-I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diagrammet är uppdelat i tre huvudsakliga delar. initiering, Game loop samt Endscreen. Dessa tillstånd representerar programmets flöde, från start till avslut.
+I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diagrammet är uppdelat i tre huvudsakliga delar: initiering, _game loop_ samt avslutningsbild. Programmet befinner sig alltid i något av dessa stadier.
+
+#linebreak()
+
 #figure2(
   image("jsp.drawio.png", width: 100%),
   caption: [_JSP-diagram över programmets överhängande struktur och kontrollflöde._],
@@ -140,11 +150,20 @@ I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diag
 
 = Projektets delar
 
-I detta projekt har det använts en LCD-display HD4480, en OLED-display ssd1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
+I detta projekt har gruppen använt LCD-displayen HD4480, OLED-displayen SSD1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
 
 == DAvid-kort
 
-I detta projekt har ett DAvid-kort använts. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå. I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16A. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+I detta projekt har ett DAvid-kort använts, figur 4 visar utseendet på DAvid-kortet. Detta är ett kort som är utvecklat och framtaget av Linköpings universitet för kursen mikrodatorprojekt (TSIU51). Kortet är utrustat med en mängd olika ingångs- och utgångs-komponenter vilket möjliggör enkel mjukvaruutveckling på en låg nivå.
+
+I den ursprungliga versionen av DAvid-kortet användes en Arduino Uno med en ATmega328p processor. Denna ersattes sedan av processorkortet Dart, som bygger på ATmega16A. Då tidigare versionen blev mer begränsad under mer avancerade projekt. Dart erbjuder fler funktioner och mer avancerad felsökning med hjälp av JTAG.
+
+#linebreak()
+
+#figure2(
+  image("dart.png", width: 70%),
+  caption: [_Figuren visar designen och pin-schema för DAvid-kortet._]
+)
 
 == Processor ATmega16A
 
@@ -152,18 +171,18 @@ Atmega16A är hjärnan på DAvid-kortet och styr alla ingångs- och utgångs-kom
 
 Atmega16A ingår i AVR-familjen vilket innebär att det är en 8-bitars mikrokontroller, vilket innebär att den hanterar och arbetar med data 8 bitar (1 byte) åt gången.
 
-#pagebreak()
-
 == TWI
 
-TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör #linebreak() dataöverföring mellan en _master_ (en mikrokontroller) och en eller flera _slavenheter_ (skärmar m.m). Det är mastern som initierar transaktionerna med slavenheterna. Mastern  adresserar först slavenheten och begär därefter antingen en skrivning eller läsning från slavenheten.
+TWI (_Two Wire Interface_) är ett kommunikationsprotokoll som möjliggör dataöverföring mellan en _master_ (en mikrokontroller) och en eller flera _slavenheter_ (div. tillbehör m.m). TWI-kommunikation består av en serie av _transaktioner_ vilket initieras av mastern. En transaktion består av stegen startsignal, addressering av slav, dataöverföring och slutsignal. Vad dessa steg innebär för signaler ut på bussen återfinns nedan i figur 5.
+
 #linebreak()
-#linebreak()
+
 #figure2(
   image("images/twi.png.png", width: 70%),
-  caption: [_Figuren illustrerar en I2C-kommunikationssekvens med signalerna SDA och SCL. Den visar ett START-villkor, dataöverföring under klockpulser, ett eventuellt Repeated Start, och avslutas med ett STOP-villkor._],)
-#linebreak()
-TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. Själva överföringen av data och är i vilande tillstånd hög. SCL är klocksignaler som masterenheten genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
+  caption: [_Figuren illustrerar en TWI-kommunikationssekvens med signalerna SDA och SCL. Den visar ett START-villkor, dataöverföring under klockpulser, ett eventuellt Repeated Start, och avslutas med ett STOP-villkor._]
+)
+
+TWI-bussen använder endast två ledare SDA (data) och SCL (klocka). SDA används för att skicka och ta emot data. Själva överföringen av data är i vilande tillstånd hög. Över SCL skickas klocksignaler som mastern genererar. Dessa signaler styr tempot i dataöverföringen, där endast data får ändras vid fallande flank på SCL och läses av vid stigande flank.
 
 En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en startsignal, vilket innebär att SDA går låg medan SCL fortfarande är hög. Därefter skickar master-enheten en 7-bitars adress som motsvarar en av slavenheternas adress. Detta följs av en R/W-bit. Därefter kommer en _ack-bit_ som visar att denna del av transaktionen är klar. Därefter kommer dataöverföringen, beroende på R/W-biten skickas data eller tas emot. Kommunikationen sker byte för byte, där varje skickad byte följs av en ack-bit som bekräftar korrekt mottagning innan nästa byte överförs. När hela transaktionen är färdig skickar mastern en stoppsignal med hjälp av SDA och SCL, detta frigör TWI-bussen för nya transaktioner.
 
@@ -171,35 +190,29 @@ En transaktion på TWI-bussen inleds alltid av masterenheten. Mastern skickar en
 
 == LCD HD4480 (textdisplay)
 
-Skärmen som visas i figur 5 är LCD HD4480 och detta är en LCD-display vilket betyder att det är en “_Liquid Crystal Display_”. De betyder att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
+Skärmen som visas i figur 5 är av modell LCD HD4480 där LCD syftar på att det är en “_Liquid Crystal Display_”. Dessa fungerar genom att den har ett lager av flytande kristaller som kan ändra hur ljus passerar genom dem med hjälp av elektrisk spänning, så pixlar blir ljusa eller mörka.
 
-#figure2(  
+#figure2(
   image("images/hd44780.png", width: 100%),
   caption: [_LCD HD44780 som användes för att visa menyn till spelet samt poängräkningen under spelets gång._],
 )
 
-Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett DDRAM och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och CGROM är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
-
-#pagebreak()
+Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett _DDRAM_ (_Display Data RAM_) och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och _CGROM_ (_Character Generator ROM_) är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
 För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda 4 eller 8 bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
-#figure2(
-  image("images/hd44780-schematic.png", width: 100%),
-  caption: [_Kopplingsschema för en LCD HD44780 16x2-display (till höger), styrd via I2C med en PCF8574T I/O-expander (till vänster)._],
-)
 
 #pagebreak()
-
+ 
 == SSD1309 (grafisk display) 
 
-En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64 pixlar. Det är på denna display som spelets grafik utspelar sig.
+En drivkrets av typ SSD1309 kopplat till en monokrom OLED-panel med upplösning på 128x64 pixlar. Det är på denna display som spelets grafik utspelar sig. SSD1309:s design framgår i figur 7.
 
 #figure2(
-  image("damatrix-cpu-schematic.png", width: 50%),
-  caption: [_PB4..PB7 för SPI som går ut mot DAMatrix-kontakten från processorn._],
+  image("images/image2.png", width: 50%),
+  caption: [_SSD1309 är den primära skärmen där spelet utspelar sig. Bilden visar himmelen och marken som finns i spelet. _],
 )
 
-Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix styrs den från processorn med 4-pin SPI. Den har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
+Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMatrix styrs den från processorn med 4-pin SPI. Figur 8 representerar hur SPI-kommunikationen utförs. Drivkretsen har ett internt GDDRAM av storlek 1 KiB, en bit för varje pixel. Detta GDDRAM skrivs via kommandon skickade över SPI och på detta vis uppdateras innehållet på skärmen kontinuerligt.
 
 #figure2(
   image("damatrix-connector-schematic.png", width: 50%),
@@ -210,12 +223,15 @@ Drivkretsen är kopplad till DAvid-kortet med en DAMatrix-kontakt och likt DAMat
 
 Innan något kan visas måste drivkretsen först startas och konfigureras. Drivkretsen har ett extremt avancerat kommandosystem för att möjliggöra avancerad användning. Vi har i detta projekt valt att inte använda något förutom de simplaste funktionerna, då annat skulle kräva tid som vi inte hade.
 
-I stora drag skickas 18 olika kommandon, åtta bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Dess exakta funktion beskrivs i databladet för SSD1309. Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
+I stora drag skickas 18 olika kommandon, åtta bitar vardera till drivkretsen för att initiera och konfigurera den. Dessa kommandon återfinns nedan. Deras exakta funktion beskrivs i databladet för SSD1309 (Solomon Systech Limited, 2011). Efter detta börjar displayen visa vad som finns i dess interna minne och vårt spel riktar sitt fokus till att uppdatera detta kontinuerligt från SRAM.
 
-  ```asm
+#figure2(
+  [```asm
 INIT_PARAMS: .db $81,$ff,$a4,$20,$00,$a6,$d9,$f1,$af,$2e,$a1,$40,$d3,$00,$d5,$80,$c8,$e3
 .equ INIT_PARAMS_LEN = 18
-```
+```],
+  caption: [_Initieringsparametrar till SSD1309_],
+)
 
 == Tryckknappar L/R
 
@@ -225,16 +241,16 @@ På DAvid kortet finns sex tryckknappar. tre till vänster (L1, L, L2) och till 
 
 == Högtalare
 
-Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den piezoelektriska effekten – ett fysikaliskt fenomen där vissa material deformeras och alstrar ljudvågor när en elektrisk växelspänning appliceras. Denna typ av högtalare är särskilt effektiv vid höga frekvenser och har högst verkningsgrad i området 3000–4000 Hz. Även andra hörbara frekvenser kan återges, men med minskad effektivitet.
+Kortet är utrustat med en piezoelektrisk högtalare, som fungerar enligt den piezoelektriska effekten – ett fysikaliskt fenomen där vissa material deformeras och alstrar ljudvågor när en elektrisk växelspänning appliceras. Denna typ av högtalare är särskilt effektiv vid höga frekvenser och har högst verkningsgrad i området 3000–4000 Hz. Även andra hörbara frekvenser kan återges, men med minskad effektivitet. (Josefsson, 2025).
+
+Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern SPEAKER_JP  .
+
+Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port PB1 på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. Kopplingschemat för dessa visas i figur 10.
 
 #figure2(
   image("images/speaker-schematic.png", width: 50%),
   caption: [_Kopplingsschema för högtalare & IR-sändare._],
 )
-
-Ljudstyrkan regleras med en potentiometer som gör det möjligt att ställa volymen från full styrka ned till helt tyst läge. Högtalaren kan dessutom kopplas bort helt genom att ta bort byglingen på jumpern SPEAKER_JP  .
-
-Eftersom högtalaren är passiv kräver den ingen separat matningsspänning; den drivs enbart av en signal från port PB1 på mikrokontrollern. Notera att denna utgång även delas med IR-sändaren, vilket innebär att dessa två komponenter inte kan användas oberoende av varandra. Deras samverkan måste alltså hanteras i mjukvara eller hårdvara. 
 
 #pagebreak()
 = Beskrivning av programvara
@@ -243,7 +259,7 @@ I detta kapitel beskrivs programvaran som användes för att realisera spelet. F
 
 == Programflöde
 
-Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, omfamnas all logik i kodbasen av en Game Loop som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i en enkel ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström.
+Bortsett från den minimala kod som krävs för att initiera processorn och annan hårdvara, omfamnas all logik i kodbasen av en Game Loop som på en abstraherad nivå ser till att nödvändiga funktioner alltid sker i ordning. Det är en oändlig loop som börjar direkt efter initieringen. Programmet stannar kvar i denna loop tills processorn återställs eller tappar ström. Figur 11 visar hur vår Game Loop ser ut.
 
 #linebreak()
 Dessa steg är:
@@ -255,8 +271,9 @@ Dessa steg är:
 - Överför VRAM över SPI till SSD1309s interna GDDRAM
 - Testa om spelaren kolliderar med ett hinder  
 
-Detta avsnitt med kod är hur vår Game loop ser ut:
-```asm
+
+#figure2(
+  [```asm
 game_update:
 	call update_player
 	call update_player_input
@@ -267,16 +284,36 @@ game_update:
 	...
 	call test_death
 	ret
-```
+```],
+  caption: [_Figuren visar uppdateringsfunktionen som game loop stegar varje iteration._],
+)
  
 
-== _Rendering_
+== Rendering
 
-För att förenkla överföring av VRAM till SSD1309s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger, detta repeteras 128 gånger tills högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen.
+#set par(leading: 0.9em)
 
-Proceduren för att rendera ett objekt, exempelvis spelaren eller hinder, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen används en _bitmask_ samt en or-instruktion för att sätta biten till ett.
+För att förenkla överföring av VRAM till SSD1309:s GDDRAM efterliknar strukturen av data i VRAM det som krävs av displayen. Det är en _array_ av 768 bytes, där varje byte representerar en vertikal kolumn av 8 pixlar. Den första byten innehåller data för kolumnen på plats (0, 0) på skärmen, högst upp till vänster. Nästkommande byte representerar kolumnen ett steg till höger, detta repeteras 128 gånger tills högra sidan på skärmen är nådd. Därefter fortsätter detta för kolumnerna 8 pixlar nedåt, nästa rad på skärmen. Avbrottsdrivna bakgrundsrutiner överför innehållet i VRAM kontinuerligt till skärmen och det visas upp enligt figur 12.
 
-```asm
+#figure2(
+  image("images/render.png", width: 60%),
+  caption: [_En frame, renderad och visad på OLED-skärmen._],
+)
+
+Proceduren för att rendera ett objekt, exempelvis spelaren eller hinder, blir därför att loopa över varje pixel som ska tändas och pixelns (x, y)-koordinat. För varje pixel anropas en funktion `light_pixel` som illustreras i figur 13 med koordinaterna som argument. Denna funktion ansvarar för att kalkylera vilken byte i VRAM pixeln tillhör, samt positionen av biten inuti byten (0..7). När den aktuella positionen i VRAM är funnen används en _bitmask_ samt en or-instruktion för att sätta biten till ett.
+
+Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, vid normala omständigheter är dessa följande:
+- Himmel, ovan spelaren
+- Mark, under spelaren
+- Spelarens figur
+- Alla befintliga hinder, som lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
+
+#set par(leading: 1em)
+
+#pagebreak()
+
+#figure2(
+  [```asm
 ; x/y i r16/r17
 light_pixel:
 	mov r23, r17
@@ -312,11 +349,16 @@ light_pixel_end:
 	or r21, r22
 	st Z, r21
 	ret
-```
+```],
+  caption: [_Figuren visar funktionen light_pixel som används i renderingen genom att tända en pixel åt gången._],
+)
 
-Spelarens figur i sitt normaltillstånd utgörs av en 5x5 kub av tända pixlar och renderas således utav följande kod:
+#pagebreak()
 
-```asm
+Spelarens figur i sitt normaltillstånd utgörs av en 5x5 kvadrat av tända pixlar och renderas utav funktionen `draw_cube_1` i figur 14.
+
+#figure2(
+  [```asm
 draw_cube_1:
 	ldi r16, POS_X
 	lds r17, POS_Y
@@ -340,19 +382,11 @@ in1:
 	dec r25
 	brne in2
 	ret
-```
-
-#linebreak()
-Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, vid normala omständigheter är dessa följande:
-- Himmel, ovan spelaren
-- Mark, under spelaren
-- Spelarens figur
-- Alla befintliga hinder, som lagras i en lista på 128 bitar, en bit för varje x-position på skärmen
-
-#figure2(
-  image("images/render.png", width: 60%),
-  caption: [_En frame, renderad och visad på OLED-skärmen._],
+```],
+  caption: [_Figuren visar funktien draw_cube_1 som loopar alla pixelkoordinater inom kuben och tänder dem en åt gången._],
 )
+
+#pagebreak()
 
 = Diskussion
 
@@ -360,9 +394,9 @@ Denna renderingsprocedur repeteras för varje distinkt objekt som ska visas, vid
 
 Vid starten av utvecklingen hade vi stora problem med initieringen av de båda skärmarna. Flera veckor av projekttiden spenderades utan att några framsteg togs. Vi fick sedan hjälp av vår handledare som gjorde att större framsteg kunde tas. Detta var genom exempelkod och ny hårdvara.
 
-Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var vår display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att Oled-displayen var defekt och vi fick en ny som vi använde under projektets gång.
+Vid starten av projektet kämpade gruppen med hårdvara som var defekt. Det var våran display SSD1309 som vi fick från början som inte fungerade. Effekten av detta var att vi satt i många timmar utan att något fungerade. Vi fick sedan hjälp av handledaren med att felsöka med logikanalysator. Efter detta felsökande konstaterade vi att OLED-displayen var defekt och vi fick en ny som vi använde under projektets gång.
 
-Ett annat problem som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixelskärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat våra hinder samt en punkt som representerade spelaren. Efter en tids arbete utan större framgång diskuterade gruppen med examinatorn om det var möjligt att skapa ett annat objekt som spelare i stället för dinosaurien vilket vi fick godkännande för.
+Ett annat problem som vi stötte på under projektets gång var att animera en dinosaurie på en 128 x 64 pixelskärm var väsentligt mer komplicerat än vad vi hade kunnat förvänta oss. Detta blev ett avgörande val för vår utveckling då vi hade implementerat våra hinder samt en punkt som representerade spelaren. Efter en tids arbete utan större framgång diskuterade gruppen med examinatorn om det var möjligt att teckna spelaren som en kub i stället för en dinosaurie vilket vi fick godkännande för.
 
 == Förslag till förbättringar
 
@@ -370,25 +404,35 @@ Några förbättringar till projektet kunde innefattat just de utökade kraven. 
 
 En annan förbättring hade varit att skapa mer avancerade ljudeffekter. Specifikt att kunna ha ljud samtidigt som man är inne i spelet. När vi skapade ljudeffekterna när spelaren kolliderar med ett hinder var det endast simpla ljudeffekter. Med mer tid hade vi kunnat implementera olika ljudeffekter för spel-loopen, hopp och duckning. Vi insåg tidigt att våra skall-krav var relativt avancerade. När dessa hade implementerats kände gruppen sig nöjd med projektets resultat.
 
+#pagebreak()
+
 == Gruppsamarbete och tidsplan
 
  Emellertid vill vi poängtera att samarbetet inom gruppen fungerade mycket väl. Vi lyckades dessutom följa den tidsplan som vi tidigt skapade. Samtliga gruppmedlemmar arbetade hårt för att uppnå önskat resultat, trots de utmaningar som uppstod under utvecklingen.
 
 = Slutsats
 
-Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Spelet som vi har konstruerat har varit bättre än förväntat. Även fast vi inte hann implementera de utökade kraven känner vi att slutprodukten är i linje med vår ursprungliga vision av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi känner att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
+Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Känslan på slutprodukten som vi uppnådde var över våra förväntningar även då vi inte hann implementera de utökade kraven. Vi känner att slutprodukten är i linje med vår ursprungliga vision av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi känner att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
+
+#pagebreak()
 
 = Referenslista
+
+- Atmel _Corporation_. (2002). _ATmega16A datasheet_. [Internt material]
+
+- Hitachi, Ltd. (1999). _HD44780U datasheet_. [Internt material]
 
 - Josefsson, M. (2025)._ Datorteknik DAvid Hårdvarubeskrivning._ [Internt material]
 
 - Josefsson, M. (2024, 12). _DAvid/Dart principschema_. [Internt material]
 
-- Atmel _Corporation_. (2002). _ATmega16A datasheet_. [Internt material]
 
 - Solomon Systech _Limited_. (2011). _SSD1309 datasheet_. [Internt material]
 
-- Hitachi, Ltd. (1999). _HD44780U datasheet_. [Internt material]
+#sectionbreak()
+#sectionbreak()
+#sectionbreak()
+#sectionbreak()
 
 #show: appendix
 
