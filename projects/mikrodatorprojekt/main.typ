@@ -197,7 +197,7 @@ Skärmen som visas i figur 5 är av modell LCD HD44780 där LCD syftar på att d
   caption: [_LCD HD44780 som användes för att visa menyn till spelet samt poängräkningen under spelets gång._],
 )
 
-Displayen är en alfanumerisk display som har 2 rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett _DDRAM_ (_Display Data RAM_) och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och _CGROM_ (_Character Generator ROM_) är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
+Displayen är en alfanumerisk display som har två rader med 16 tecken på vardera rad. Varje teckenkolumn består av 5x8 pixlar.  I displayen finns det ett _DDRAM_ (_Display Data RAM_) och en CGROM. I DDRAM sparas adressen som ett tecken skrivs ut på skärmen och _CGROM_ (_Character Generator ROM_) är ett inbyggt minne i displayen som har färdiga tecken lagrade som pixelmönster som kan skriva ut på displayen.
 
 För att få en utskrift på displayen behövs det en initiering. Där får man möjlighet att använda fyra eller åtta bitars mode, antalet rader man vill använda och om bakgrundsbelysningen ska vara på eller av med mera. Dessutom kan man välja om man vill skriva till specifika platser på displayen eller om man vill göra en utskrift från vänster till höger. 
 
