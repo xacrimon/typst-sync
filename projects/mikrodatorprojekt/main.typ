@@ -150,7 +150,7 @@ I figur 3 visas ett JSP-diagram som illustrerar strukturen för programmet. Diag
 
 = Projektets delar
 
-I detta projekt har gruppen använt LCD-displayen HD4480, OLED-displayen SSD1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
+I detta projekt har gruppen använt LCD-displayen HD44780, OLED-displayen SSD1309, en ATmega16A-processor, en ljud-enhet i form av en piezoelektrisk högtalare samt två tryckknappar. Dessa komponenter är monterade på ett DAvid-kort. I denna del av rapporten fokuserar vi på att beskriva de olika delar och förklara hårdvarans funktioner och hur de användes i projektet.
 
 == DAvid-kort
 
