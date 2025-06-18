@@ -412,7 +412,7 @@ En annan förbättring hade varit att skapa mer avancerade ljudeffekter. Specifi
 
 = Slutsats
 
-Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Känslan på slutprodukten som vi uppnådde var över våra förväntningar även då vi inte hann implementera de utökade kraven. Vi känner att slutprodukten är i linje med vår ursprungliga vision av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi känner att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
+Slutligen kan man konstatera att gruppen är väldigt belåtna med arbetet vi lyckats utföra. Känslan kring slutprodukten vi uppnådde överträffade våra förväntningar även då vi inte hann implementera de utökade kraven. Vi känner att slutprodukten är i linje med vår ursprungliga vision av projektet. Det hade varit roligt att kunna implementera en funktion som sparade resultaten och visade upp en lista med de högsta poängen. Vi känner att spelet ändå fungerar mycket väl utan dessa funktioner. Vi är mycket nöjda över hur snabbt spelet går och hur stabilt det fungerar under spelets gång.
 
 #pagebreak()
 
